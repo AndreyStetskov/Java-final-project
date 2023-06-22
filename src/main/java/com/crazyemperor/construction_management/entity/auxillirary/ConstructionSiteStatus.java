@@ -1,0 +1,9 @@
+package com.crazyemperor.construction_management.entity.auxillirary;
+
+public enum ConstructionSiteStatus {
+    ACTIVE,
+    NON_STARTED,
+    FINISHED,
+    FROZEN,
+    CLOSED
+}
