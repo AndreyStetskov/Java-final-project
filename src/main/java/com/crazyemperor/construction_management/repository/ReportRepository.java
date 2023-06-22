@@ -15,6 +15,4 @@ public interface ReportRepository extends PagingAndSortingRepository<Member, Lon
             "GROUP BY org.department",
             countQuery = "SELECT COUNT(*) AS total_departments")
     Page<Member> countDepartment(Pageable pageable);
-
-//    Page<Member> count(Pageable pageable);
 }
