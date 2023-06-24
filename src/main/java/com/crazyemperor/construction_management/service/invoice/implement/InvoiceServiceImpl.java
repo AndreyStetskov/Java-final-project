@@ -21,4 +21,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<Invoice> getUnpaid(long id) {
         return invoiceRepository.findAllUnpaid(id);
     }
+
+    @Override
+    public List<Invoice> selectedForPay(List<Invoice> choice) {
+
+        return choice;
+    }
+
+
 }

@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface OfferService {
 
-    Offer getCheapest();
-    Offer getFastest();
+    Offer getCheapest(long id);
+    Offer getFastest(long id);
 
-    List<Offer> getCheaperThan(BigDecimal amount);
-    List<Offer> getFasterThen(int days);
+    List<Offer> getCheaperThan(long id, BigDecimal amount);
+    List<Offer> getFasterThen(long id, int days);
 
     void irrelevant ();
 }

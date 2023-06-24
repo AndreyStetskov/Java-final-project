@@ -54,30 +54,30 @@ public class OfferController {
         return offer != null ? ResponseEntity.ok(deleted) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/cheapest")
-    public ResponseEntity<Offer> getTheBestOfferByAmount() {
-        Offer cheapestOffers = offerService.getCheapest();
+    @GetMapping(value = "/{member_id}/cheapest")
+    public ResponseEntity<Offer> getTheBestOfferByAmount(@PathVariable long member_id) {
+        Offer cheapestOffers = offerService.getCheapest(member_id);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/cheapest/{amount}")
-    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable BigDecimal amount) {
-        List<Offer> cheapestOffers = offerService.getCheaperThan(amount);
+    @GetMapping(value = "/{member_id}/cheapest/{amount}")
+    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable long member_id, @PathVariable BigDecimal amount) {
+        List<Offer> cheapestOffers = offerService.getCheaperThan(member_id, amount);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/fastest")
-    public ResponseEntity<Offer> getTheBestOfferByDay() {
-        Offer fastestOffers = offerService.getFastest();
+    @GetMapping(value = "/{member_id}/fastest")
+    public ResponseEntity<Offer> getTheBestOfferByDay(@PathVariable long member_id) {
+        Offer fastestOffers = offerService.getFastest(member_id);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/fastest/{days}")
-    public ResponseEntity<List<Offer>> getOffersByDay(@PathVariable int days) {
-        List<Offer> fastestOffers = offerService.getFasterThen(days);
+    @GetMapping(value = "/fastest/{member_id}/{days}")
+    public ResponseEntity<List<Offer>> getOffersByDay(@PathVariable long member_id, @PathVariable int days) {
+        List<Offer> fastestOffers = offerService.getFasterThen(member_id, days);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
     }

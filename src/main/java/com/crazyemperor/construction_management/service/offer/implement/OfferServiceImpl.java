@@ -1,7 +1,6 @@
 package com.crazyemperor.construction_management.service.offer.implement;
 
 import com.crazyemperor.construction_management.entity.Offer;
-import com.crazyemperor.construction_management.entity.auxillirary.OfferStatus;
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.offer.OfferService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,96 +22,84 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     @Transactional
-    public Offer getCheapest() {
+    public Offer getCheapest(long id) {
 
-        List<Offer> offerList = offerRepository.findAll();
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
 
         if (offerList.isEmpty()) {
             return null;
         }
 
-        AtomicReference<Offer> cheapestProposal = new AtomicReference<>(new Offer());
+        Offer cheapestProposal = new Offer();
+        BigDecimal minPrice = new BigDecimal(String.valueOf(offerList.get(0).getAmount()));
 
-        AtomicReference<BigDecimal> minPrice = new AtomicReference<>(offerList.get(0).getAmount());
+        for (Offer offer : offerList) {
+            if (minPrice.compareTo(offer.getAmount()) > 0) {
+                String value = String.valueOf(offer.getAmount());
+                minPrice= new BigDecimal(value);
 
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .forEach(offer -> {
-                    if (minPrice.get().compareTo(offer.getAmount()) > 0) {
-                        String value = String.valueOf(offer.getAmount());
-                        minPrice.set(new BigDecimal(value));
+                cheapestProposal= offer;
+            }
+        }
 
-                        cheapestProposal.set(offer);
-                    }
-                });
-
-        return cheapestProposal.get();
+        return cheapestProposal;
     }
 
     @Override
     @Transactional
-    public Offer getFastest() {
+    public Offer getFastest(long id) {
 
-        List<Offer> offerList = offerRepository.findAll();
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
 
         if (offerList.isEmpty()) {
             return null;
         }
 
-        AtomicReference<Offer> fastestProposal = new AtomicReference<>(new Offer());
-        AtomicInteger minDays = new AtomicInteger(100000000);
+        Offer fastestProposal = new Offer();
+        int minDays = Integer.MAX_VALUE;
 
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .forEach(offer -> {
-                    LocalDate start = LocalDate.parse(String.valueOf(offer.getStart()));
-                    LocalDate finish = LocalDate.parse(String.valueOf(offer.getDeadline()));
+        for (Offer offer : offerList) {
+            LocalDate start = LocalDate.parse(String.valueOf(offer.getStart()));
+            LocalDate finish = LocalDate.parse(String.valueOf(offer.getDeadline()));
 
-                    int days = Period.between(start, finish).getDays();
+            int days = Period.between(start, finish).getDays();
 
-                    if (days < minDays.get()) {
-                        minDays.set(days);
+            if (days < minDays) {
+                minDays = days;
+                fastestProposal = offer;
+            }
+        }
 
-                        fastestProposal.set(offer);
-                    }
-                });
-
-        return fastestProposal.get();
+        return fastestProposal;
     }
 
     @Override
-    public List<Offer> getCheaperThan(BigDecimal amount) {
+    @Transactional
+    public List<Offer> getCheaperThan(long id, BigDecimal amount) {
 
-        List<Offer> offerList = offerRepository.findAll();
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
 
         if (offerList.isEmpty()) {
             return null;
         }
 
         offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
                 .filter(budget -> budget.getAmount().compareTo(amount) <= 0)
-                .toList();
+                .collect(Collectors.toList());
 
         return offerList;
     }
 
     @Override
     @Transactional
-    public List<Offer> getFasterThen(int deadline) {
-        List<Offer> offerList = offerRepository.findAll();
+    public List<Offer> getFasterThen(long id, int deadline) {
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
 
         if (offerList.isEmpty()) return null;
 
         List<Offer> newList = new ArrayList<>();
 
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .forEach(offer -> {
+        offerList.forEach(offer -> {
                     LocalDate start = LocalDate.parse(String.valueOf(offer.getStart()));
                     LocalDate finish = LocalDate.parse(String.valueOf(offer.getDeadline()));
                     int days = Period.between(start, finish).getDays();

@@ -2,6 +2,7 @@ package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.crud.building.ConstructionSiteCRUDService;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
+import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.service.building.ConstructionSiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,26 @@ public class ConstructionSiteController {
     @GetMapping(value = "sum/{date}")
     public BigDecimal getSumAfter(@RequestBody LocalDate date) {
         return constructionSiteService.getSumBuildingsAfterDate(date);
+    }
+
+    @PutMapping(value = "/add_constructor")
+    public ResponseEntity<ConstructionSite> addConstructor(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        ConstructionSite constructor = constructionSiteService.selectedConstructor(constructionSite, offer);
+
+        return constructionSite != null ? ResponseEntity.ok(constructor) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/add_engineering")
+    public ResponseEntity<ConstructionSite> addEngineering(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        ConstructionSite engineering = constructionSiteService.selectedEngineering(constructionSite, offer);
+
+        return constructionSite != null ? ResponseEntity.ok(engineering) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/add_protector")
+    public ResponseEntity<ConstructionSite> addProtector(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        ConstructionSite protector = constructionSiteService.selectedProtector(constructionSite, offer);
+
+        return constructionSite != null ? ResponseEntity.ok(protector) : ResponseEntity.noContent().build();
     }
 }

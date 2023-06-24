@@ -62,7 +62,7 @@ public class Organisation {
     @Column(name = "web_site")
     private String site;
 
-    @NotBlank(message = "")
+//    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private OrganisationStatus status;
 

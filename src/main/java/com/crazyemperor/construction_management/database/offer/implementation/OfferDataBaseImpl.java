@@ -1,6 +1,5 @@
 package com.crazyemperor.construction_management.database.offer.implementation;
 
-import com.crazyemperor.construction_management.database.offer.OfferDataBaseService;
 import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OfferDataBaseImpl implements OfferDataBaseService {
+public class OfferDataBaseImpl implements com.crazyemperor.construction_management.database.offer.OfferDataBaseService {
 
     private final OfferRepository offerRepository;
 
@@ -36,6 +35,12 @@ public class OfferDataBaseImpl implements OfferDataBaseService {
     @Cacheable("Offers")
     public Offer getByID(long id) {
         return offerRepository.findById(id);
+    }
+
+    @Override
+    @Cacheable("Offers")
+    public Offer getByTitle(String name) {
+        return offerRepository.findByTitle(name);
     }
 
     @Override

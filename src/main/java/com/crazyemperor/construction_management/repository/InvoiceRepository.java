@@ -13,6 +13,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT invoice " +
             "FROM Invoice invoice " +
             "LEFT JOIN Member member ON invoice.id = member.id " +
-            "WHERE invoice.isDeleted = false AND invoice.paidStatus = 1 AND member.id = :memberId")
+            "WHERE invoice.isDeleted = false AND invoice.paidStatus = 1 AND invoice.payer = :memberId")
     List<Invoice> findAllUnpaid(Long memberId);
 }

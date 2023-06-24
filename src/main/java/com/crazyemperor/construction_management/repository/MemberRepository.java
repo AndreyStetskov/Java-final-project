@@ -13,7 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT member " +
             "FROM Member member " +
             "LEFT JOIN Organisation org ON member.id = org.id " +
-            "WHERE org.email LIKE '%@gmail.com'")
+            "WHERE org.email LIKE '%@' + '%.' + '%'")
     List<Member> findMembersWithGmailAddress();
 
     @Query("SELECT org.name, building.title " +

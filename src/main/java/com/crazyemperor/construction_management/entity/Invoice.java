@@ -52,7 +52,7 @@ public class Invoice {
     @FutureOrPresent
     private LocalDate deadline;
 
-    @NotNull(message = "this field mustn't be null")
+//    @Enumerated(EnumType.STRING)
     @Column(name = "paid_status")
     private InvoiceStatus paidStatus;
 
