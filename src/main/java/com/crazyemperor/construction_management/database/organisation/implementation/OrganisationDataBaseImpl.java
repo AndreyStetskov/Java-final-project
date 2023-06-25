@@ -3,7 +3,9 @@ package com.crazyemperor.construction_management.database.organisation.implement
 import com.crazyemperor.construction_management.database.organisation.OrganisationDataBaseService;
 import com.crazyemperor.construction_management.entity.Organisation;
 import com.crazyemperor.construction_management.repository.OrganisationRepository;
+import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -26,39 +28,47 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
         return organisationRepository.save(offer);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Organisations")
     public List<Organisation> getOrganisations() {
-        return organisationRepository.findAll();
+
+        Optional<List<Organisation>> organisations = Optional.of(organisationRepository.findAll());
+
+        return organisations
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Organisations")
     public Organisation getByID(long id) {
-        return organisationRepository.findById(id);
+
+        return organisationRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Organisations")
-    public Organisation deleteByName(String name, Organisation delete) {
+    public void deleteByName(String name) {
         Optional<Organisation> organisationOptional = Optional.ofNullable(organisationRepository.findByName(name));
         if (organisationOptional.isPresent()) {
             Organisation organisation = organisationOptional.get();
             organisation.setDeleted(true);
             organisationRepository.save(organisation);
         }
-        return organisationOptional.orElse(null);
+        else throw new DataNotFoundException();
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Organisations")
-    public Organisation deleteByID(long id, Organisation delete) {
-        Optional<Organisation> organisationOptional = Optional.ofNullable(organisationRepository.findById(id));
-        if (organisationOptional.isPresent()) {
-            Organisation organisation = organisationOptional.get();
+    public void deleteByID(long id) {
+        Organisation organisation = organisationRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+
             organisation.setDeleted(true);
             organisationRepository.save(organisation);
-        }
-        return organisationOptional.orElse(null);
     }
 }

@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    @Query("SELECT org.id " +
+            "FROM Member member " +
+            "LEFT JOIN Organisation org ON member.id = org.id")
     Member findByOrganisationId(final long id);
-    Member findById(final long id);
     @Query("SELECT member " +
             "FROM Member member " +
             "LEFT JOIN Organisation org ON member.id = org.id " +

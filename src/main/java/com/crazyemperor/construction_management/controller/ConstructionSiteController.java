@@ -32,7 +32,10 @@ public class ConstructionSiteController {
     public ResponseEntity<List<ConstructionSite>> allConstructionSites() {
         List<ConstructionSite> constructionSites = constructionSiteCRUDService.getAllConstructionSites();
 
-        return constructionSites != null ? ResponseEntity.ok(constructionSites) : ResponseEntity.noContent().build();
+        if (constructionSites != null && !constructionSites.isEmpty()) {
+            return ResponseEntity.ok(constructionSites);
+        } else return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping(value = "/find/{id}")
@@ -43,32 +46,38 @@ public class ConstructionSiteController {
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<ConstructionSite> deleteByID(@PathVariable Long id, @RequestBody ConstructionSite constructionSite) {
-        ConstructionSite closeConstructionSite = constructionSiteCRUDService.deleteConstructionSiteByID(id, constructionSite);
+    public ResponseEntity<Long> deleteByID(@PathVariable Long id) {
+       constructionSiteCRUDService.deleteConstructionSiteByID(id);
 
-        return constructionSite != null ? ResponseEntity.ok(closeConstructionSite) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<ConstructionSite> deleteByName(@PathVariable String name, @RequestBody ConstructionSite constructionSite) {
-        ConstructionSite closeConstructionSite = constructionSiteCRUDService.deleteConstructionSiteByName(name, constructionSite);
+    public ResponseEntity<String> deleteByName(@PathVariable String name) {
+        constructionSiteCRUDService.deleteConstructionSiteByName(name);
 
-        return constructionSite != null ? ResponseEntity.ok(closeConstructionSite) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/sum/all")
-    public BigDecimal getAllSum() {
-        return constructionSiteService.getSumAllBuildings();
+    public ResponseEntity<BigDecimal> getAllSum() {
+        constructionSiteService.getSumAllBuildings();
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "sum/current")
-    public BigDecimal getCurrentSum() {
-        return constructionSiteService.getSumCurrentBuildings();
+    public ResponseEntity<BigDecimal> getCurrentSum() {
+        constructionSiteService.getSumCurrentBuildings();
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "sum/{date}")
-    public BigDecimal getSumAfter(@RequestBody LocalDate date) {
-        return constructionSiteService.getSumBuildingsAfterDate(date);
+    public ResponseEntity<BigDecimal> getSumAfter(@RequestBody LocalDate date) {
+        constructionSiteService.getSumBuildingsAfterDate(date);
+
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/add_constructor")

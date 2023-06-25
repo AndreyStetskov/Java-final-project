@@ -9,7 +9,6 @@ import java.util.List;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Invoice findByTitle(final String name);
-    Invoice findById(final long id);
     @Query("SELECT invoice " +
             "FROM Invoice invoice " +
             "LEFT JOIN Member member ON invoice.id = member.id " +

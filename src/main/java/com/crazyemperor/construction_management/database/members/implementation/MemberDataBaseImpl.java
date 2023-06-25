@@ -3,7 +3,9 @@ package com.crazyemperor.construction_management.database.members.implementation
 import com.crazyemperor.construction_management.database.members.MembersDataBaseService;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.repository.MemberRepository;
+import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -26,39 +28,45 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
         return memberRepository.save(constructionSite);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Members")
     public List<Member> getMembers() {
-        return memberRepository.findAll();
+        Optional<List<Member>> members = Optional.of(memberRepository.findAll());
+
+        return members
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Members")
     public Member getByID(long id) {
-        return memberRepository.findById(id);
+        return memberRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Members")
-    public Member deleteByOrganisation(long id, Member update) {
+    public void deleteByOrganisation(long id) {
         Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByOrganisationId(id));
         if (memberOptional.isPresent()) {
             Member member = memberOptional.get();
             member.setDeleted(true);
             memberRepository.save(member);
         }
-        return memberOptional.orElse(null);
+        else throw new DataNotFoundException();
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Members")
-    public Member deleteByID(long id, Member update) {
-        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findById(id));
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            member.setDeleted(true);
-            memberRepository.save(member);
-        }
-        return memberOptional.orElse(null);
+    public void deleteByID(long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+
+        member.setDeleted(true);
+        memberRepository.save(member);
     }
 }

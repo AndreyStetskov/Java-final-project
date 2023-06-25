@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OrganisationRepository extends JpaRepository<Organisation, Long> {
 
     Organisation findByName(final String name);
-    Organisation findById(final long id);
 }

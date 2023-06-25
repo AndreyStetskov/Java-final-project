@@ -3,7 +3,9 @@ package com.crazyemperor.construction_management.database.building.implement;
 import com.crazyemperor.construction_management.database.building.ConstructionSiteDataBaseService;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.repository.ConstructionSiteRepository;
+import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,40 +26,46 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
         return constructionSiteRepository.save(constructionSite);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("ConstructionSites")
     public List<ConstructionSite> getConstructionSites() {
-        return constructionSiteRepository.findAll();
+        Optional<List<ConstructionSite>> constructionSites = Optional.of(constructionSiteRepository.findAll());
+
+        return constructionSites
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("ConstructionSites")
     public ConstructionSite getByID(long id) {
-        return constructionSiteRepository.findById(id);
+        return constructionSiteRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("ConstructionSites")
-    public ConstructionSite deleteByName(String name, ConstructionSite update) {
+    public void deleteByName(String name) {
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(name));
         if (constructionSiteOptional.isPresent()) {
             ConstructionSite constructionSite = constructionSiteOptional.get();
             constructionSite.setDeleted(true);
             constructionSiteRepository.save(constructionSite);
         }
-        return constructionSiteOptional.orElse(null);
+        else throw new DataNotFoundException();
     }
 
     @Override
+    @SneakyThrows
     @CacheEvict("ConstructionSites")
-    public ConstructionSite deleteByID(long id, ConstructionSite update) {
-        Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findById(id));
-        if (constructionSiteOptional.isPresent()) {
-            ConstructionSite constructionSite = constructionSiteOptional.get();
-            constructionSite.setDeleted(true);
-            constructionSiteRepository.save(constructionSite);
-        }
-        return constructionSiteOptional.orElse(null);
+    public void deleteByID(long id) {
+        ConstructionSite constructionSite = constructionSiteRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+
+        constructionSite.setDeleted(true);
+        constructionSiteRepository.save(constructionSite);
     }
 
 }

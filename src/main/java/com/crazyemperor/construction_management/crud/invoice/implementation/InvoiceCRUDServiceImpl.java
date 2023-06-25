@@ -31,12 +31,12 @@ public class InvoiceCRUDServiceImpl implements InvoiceCRUDService {
     }
 
     @Override
-    public Invoice deleteInvoiceByName(String name, Invoice delete) {
-        return invoiceDB.deleteByName(name, delete);
+    public void deleteInvoiceByName(String name) {
+        invoiceDB.deleteByName(name);
     }
 
     @Override
-    public Invoice deleteInvoiceByID(long id, Invoice delete) {
-        return invoiceDB.deleteByID(id, delete);
+    public void deleteInvoiceByID(long id) {
+        invoiceDB.deleteByID(id);
     }
 }

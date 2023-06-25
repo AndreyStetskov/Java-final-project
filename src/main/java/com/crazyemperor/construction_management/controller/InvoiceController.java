@@ -4,10 +4,12 @@ import com.crazyemperor.construction_management.crud.invoice.InvoiceCRUDService;
 import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.service.invoice.InvoiceService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -29,7 +31,9 @@ public class InvoiceController {
     public ResponseEntity<List<Invoice>> allInvoices() {
         List<Invoice> invoices = invoiceCRUDService.getAllInvoices();
 
-        return invoices != null ? ResponseEntity.ok(invoices) : ResponseEntity.noContent().build();
+        if (invoices != null && !invoices.isEmpty()) {
+            return ResponseEntity.ok(invoices);
+        } else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
@@ -40,25 +44,44 @@ public class InvoiceController {
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Invoice> deleteByID(@PathVariable Long id, @RequestBody Invoice invoice) {
-        Invoice deactivate = invoiceCRUDService.deleteInvoiceByID(id, invoice);
+    public ResponseEntity<Long> deleteByID(@PathVariable Long id) {
+        invoiceCRUDService.deleteInvoiceByID(id);
 
-        return invoice != null ? ResponseEntity.ok(deactivate) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<Invoice> deleteByName(@PathVariable String name, @RequestBody Invoice invoice) {
-        Invoice deactivated = invoiceCRUDService.deleteInvoiceByName(name, invoice);
+    public ResponseEntity<Long> deleteByName(@PathVariable String name) {
+        invoiceCRUDService.deleteInvoiceByName(name);
 
-        return invoice != null ? ResponseEntity.ok(deactivated) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/unpaid/{memberId}")
+    @SneakyThrows
+    @GetMapping(value = "/{memberId}/unpaid")
     public ResponseEntity<List<Invoice>> getUnpaidInvoices(@PathVariable Long memberId) {
         List<Invoice> unpaid = invoiceService.getUnpaid(memberId);
 
-        return unpaid != null ? ResponseEntity.ok(unpaid) : ResponseEntity.noContent().build();
+        if (unpaid != null && !unpaid.isEmpty()) {
+            return ResponseEntity.ok(unpaid);
+        } else return ResponseEntity.noContent().build();
+
     }
 
+    @SneakyThrows
+    @PutMapping(value = "/{memberId}/unpaid/select")
+    public ResponseEntity<List<Invoice>> selected(@PathVariable Long memberId) {
+        List<Invoice> selected = invoiceService.selectedForPay(memberId);
+
+        if (selected != null && !selected.isEmpty()) {
+            return ResponseEntity.ok(selected);
+        } else return ResponseEntity.noContent().build();
+    }
+
+    @SneakyThrows
+    @GetMapping(value = "/{memberId}/unpaid/sum")
+    public BigDecimal getSum(@PathVariable Long memberId) {
+        return invoiceService.paymentAmount(memberId);
+    }
 
 }

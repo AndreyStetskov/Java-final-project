@@ -27,7 +27,10 @@ public class OrganisationController {
     public ResponseEntity<List<Organisation>> allOffers() {
         List<Organisation> organisations = organisationCRUDService.getAllOrganisations();
 
-        return organisations != null ? ResponseEntity.ok(organisations) : ResponseEntity.noContent().build();
+        if (organisations != null && !organisations.isEmpty()) {
+            return ResponseEntity.ok(organisations);
+        }
+        else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
@@ -38,16 +41,16 @@ public class OrganisationController {
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Organisation> deleteByID(@PathVariable Long id, @RequestBody Organisation organisation) {
-        Organisation deactivate = organisationCRUDService.deleteOrganisationByID(id, organisation);
+    public ResponseEntity<Long> deleteByID(@PathVariable Long id) {
+        organisationCRUDService.deleteOrganisationByID(id);
 
-        return organisation != null ? ResponseEntity.ok(deactivate) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<Organisation> deleteByName(@PathVariable String name, @RequestBody Organisation organisation) {
-        Organisation deactivate = organisationCRUDService.deleteOrganisationByName(name, organisation);
+    public ResponseEntity<String> deleteByName(@PathVariable String name) {
+        organisationCRUDService.deleteOrganisationByName(name);
 
-        return organisation != null ? ResponseEntity.ok(deactivate) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 public interface OfferRepository extends JpaRepository<Offer, Long> {
 
     Offer findByTitle(final String name);
-    Offer findById(final long id);
 
     @Query("SELECT offer " +
             "FROM Offer offer " +

@@ -3,7 +3,9 @@ package com.crazyemperor.construction_management.database.invoice.implementation
 import com.crazyemperor.construction_management.database.invoice.InvoiceDataBaseService;
 import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.repository.InvoiceRepository;
+import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -26,39 +28,44 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
         return invoiceRepository.save(invoice);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Invoices")
     public List<Invoice> getInvoices() {
-        return invoiceRepository.findAll();
+        Optional<List<Invoice>> invoices = Optional.of(invoiceRepository.findAll());
+
+        return invoices
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Invoices")
     public Invoice getByID(long id) {
-        return invoiceRepository.findById(id);
+        return invoiceRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Invoices")
-    public Invoice deleteByName(String name, Invoice delete) {
+    public void deleteByName(String name) {
         Optional<Invoice> invoiceOptional = Optional.ofNullable(invoiceRepository.findByTitle(name));
         if (invoiceOptional.isPresent()) {
             Invoice invoice = invoiceOptional.get();
             invoice.setDeleted(true);
             invoiceRepository.save(invoice);
         }
-        return invoiceOptional.orElse(null);
+        else throw new DataNotFoundException();
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Invoices")
-    public Invoice deleteByID(long id, Invoice delete) {
-        Optional<Invoice> invoiceOptional = Optional.ofNullable(invoiceRepository.findById(id));
-        if (invoiceOptional.isPresent()) {
-            Invoice invoice = invoiceOptional.get();
+    public void deleteByID(long id) {
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
             invoice.setDeleted(true);
             invoiceRepository.save(invoice);
-        }
-        return invoiceOptional.orElse(null);
     }
 }

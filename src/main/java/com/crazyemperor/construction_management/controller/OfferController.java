@@ -30,7 +30,9 @@ public class OfferController {
     public ResponseEntity<List<Offer>> allOffers() {
         List<Offer> offers = offerCRUDService.getAllOffers();
 
-        return offers != null ? ResponseEntity.ok(offers) : ResponseEntity.noContent().build();
+        if (offers != null && !offers.isEmpty()) {
+            return ResponseEntity.ok(offers);
+        } else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
@@ -40,18 +42,25 @@ public class OfferController {
         return offer != null ? ResponseEntity.ok(offer) : ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Offer> deleteByID(@PathVariable Long id, @RequestBody Offer offer) {
-        Offer deleted = offerCRUDService.deleteOfferByID(id, offer);
+    @GetMapping(value = "/find/{name}")
+    public ResponseEntity<Offer> getOfferByName(@PathVariable String name) {
+        Offer offer = offerCRUDService.getOfferByTitle(name);
 
-        return offer != null ? ResponseEntity.ok(deleted) : ResponseEntity.noContent().build();
+        return offer != null ? ResponseEntity.ok(offer) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/delete/{id}")
+    public ResponseEntity<Long> deleteByID(@PathVariable Long id) {
+        offerCRUDService.deleteOfferByID(id);
+
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<Offer> deleteByName(@PathVariable String name, @RequestBody Offer offer) {
-        Offer deleted = offerCRUDService.deleteOfferByName(name, offer);
+    public ResponseEntity<String> deleteByName(@PathVariable String name) {
+        offerCRUDService.deleteOfferByName(name);
 
-        return offer != null ? ResponseEntity.ok(deleted) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/{member_id}/cheapest")
@@ -82,7 +91,7 @@ public class OfferController {
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/deactivate/")
+    @PutMapping(value = "/deactivate")
     public void deactivate() {
         offerService.irrelevant();
     }

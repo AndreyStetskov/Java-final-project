@@ -9,6 +9,6 @@ public interface InvoiceDataBaseService {
     Invoice addInvoice(Invoice invoice);
     List<Invoice> getInvoices();
     Invoice getByID(long id);
-    Invoice deleteByName(String name, Invoice delete);
-    Invoice deleteByID(long id, Invoice delete);
+    void deleteByName(String name);
+    void deleteByID(long id);
 }

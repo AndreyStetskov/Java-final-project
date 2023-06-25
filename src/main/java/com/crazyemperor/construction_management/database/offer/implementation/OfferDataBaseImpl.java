@@ -2,7 +2,9 @@ package com.crazyemperor.construction_management.database.offer.implementation;
 
 import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.repository.OfferRepository;
+import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -25,45 +27,55 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
         return offerRepository.save(offer);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Offers")
     public List<Offer> getOffers() {
-        return offerRepository.findAll();
+        Optional<List<Offer>> offers = Optional.of(offerRepository.findAll());
+
+        return offers
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Offers")
     public Offer getByID(long id) {
-        return offerRepository.findById(id);
+        return offerRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @Cacheable("Offers")
     public Offer getByTitle(String name) {
-        return offerRepository.findByTitle(name);
+        Optional<Offer> offers = Optional.ofNullable(offerRepository.findByTitle(name));
+
+        return offers
+                .orElseThrow(DataNotFoundException::new);
     }
 
+    @SneakyThrows
     @Override
     @CacheEvict("Offers")
-    public Offer deleteByName(String name, Offer delete) {
-        Optional<Offer> invoiceOptional = Optional.ofNullable(offerRepository.findByTitle(name));
-        if (invoiceOptional.isPresent()) {
-            Offer offer = invoiceOptional.get();
-            offer.setDeleted(true);
-            offerRepository.save(offer);
-        }
-        return invoiceOptional.orElse(null);
-    }
-
-    @Override
-    @CacheEvict("Offers")
-    public Offer deleteByID(long id, Offer delete) {
-        Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findById(id));
+    public void deleteByName(String name) {
+        Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findByTitle(name));
         if (offerOptional.isPresent()) {
             Offer offer = offerOptional.get();
             offer.setDeleted(true);
             offerRepository.save(offer);
         }
-        return offerOptional.orElse(null);
+        else throw new DataNotFoundException();
+    }
+
+    @SneakyThrows
+    @Override
+    @CacheEvict("Offers")
+    public void deleteByID(long id) {
+        Offer offers =offerRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+
+            offers.setDeleted(true);
+            offerRepository.save(offers);
     }
 }
