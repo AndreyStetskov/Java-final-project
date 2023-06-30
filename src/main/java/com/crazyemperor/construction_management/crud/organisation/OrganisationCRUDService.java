@@ -9,6 +9,6 @@ public interface OrganisationCRUDService {
     Organisation add(Organisation organisation);
     List<Organisation> getAllOrganisations();
     Organisation getByOrganisationID(long id);
-    Organisation deleteOrganisationByName(String name, Organisation organisation);
-    Organisation deleteOrganisationByID(long id, Organisation organisation);
+    void deleteOrganisationByName(String name);
+    void deleteOrganisationByID(long id);
 }

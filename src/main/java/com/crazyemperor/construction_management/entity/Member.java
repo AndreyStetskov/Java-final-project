@@ -31,7 +31,7 @@ public class Member {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @NotNull(message = "this field mustn't be null")
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private Set<MemberType> type;
 
@@ -39,7 +39,7 @@ public class Member {
     @Column(name = "budget", precision = 10)
     private BigDecimal budget;
 
-    @NotNull(message = "this field mustn't be null")
+//    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private MemberStatus status;
 

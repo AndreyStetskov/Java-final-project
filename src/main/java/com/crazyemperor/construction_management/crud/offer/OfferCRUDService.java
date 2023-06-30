@@ -9,6 +9,7 @@ public interface OfferCRUDService {
     Offer add(Offer offer);
     List<Offer> getAllOffers();
     Offer getOfferByID(long id);
-    Offer deleteOfferByName(String name, Offer delete);
-    Offer deleteOfferByID(long id, Offer delete);
+    Offer getOfferByTitle(String name);
+    void deleteOfferByName(String name);
+    void deleteOfferByID(long id);
 }

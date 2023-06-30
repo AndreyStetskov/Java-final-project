@@ -1,8 +1,10 @@
 package com.crazyemperor.construction_management.service.building.implement;
 
 import com.crazyemperor.construction_management.entity.ConstructionSite;
+import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.entity.auxillirary.ConstructionSiteStatus;
 import com.crazyemperor.construction_management.repository.ConstructionSiteRepository;
+import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.building.ConstructionSiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,12 +12,15 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
     private final ConstructionSiteRepository constructionSiteRepository;
+    private final OfferRepository offerDBService;
 
 
     @Override
@@ -45,7 +50,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
         buildingList.stream()
                 .filter(current -> current.getStatus().equals(ConstructionSiteStatus.ACTIVE))
-                .toList();
+                .collect(Collectors.toList());
 
         for (ConstructionSite building : buildingList) {
             BigDecimal result = sum.add(building.getAmount());
@@ -65,7 +70,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
         buildingList.stream()
                 .filter(current -> current.getStart().isAfter(date))
-                .toList();
+                .collect(Collectors.toList());
 
         for (ConstructionSite building : buildingList) {
             BigDecimal result = sum.add(building.getAmount());
@@ -74,4 +79,36 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
         return sum;
     }
+
+    @Override
+    public ConstructionSite selectedConstructor(ConstructionSite constructor, Offer selected) {
+        Optional<Offer> offerOptional = Optional.ofNullable(offerDBService.findByTitle(selected.getTitle()));
+        if (offerOptional.isPresent()) {
+            constructor.setConstructor(selected.getAcceptor());
+            constructionSiteRepository.save(constructor);
+        }
+        return constructor;
+    }
+
+    @Override
+    public ConstructionSite selectedEngineering(ConstructionSite engineering, Offer offer) {
+        Optional<Offer> offerOptional = Optional.ofNullable(offerDBService.findByTitle(offer.getTitle()));
+        if (offerOptional.isPresent()) {
+            engineering.setEngineering(offer.getAcceptor());
+            constructionSiteRepository.save(engineering);
+        }
+        return engineering;
+    }
+
+    @Override
+    public ConstructionSite selectedProtector(ConstructionSite projector, Offer offer) {
+        Optional<Offer> offerOptional = Optional.ofNullable(offerDBService.findByTitle(offer.getTitle()));
+        if (offerOptional.isPresent()) {
+            projector.setProjector(offer.getAcceptor());
+            constructionSiteRepository.save(projector);
+        }
+        return projector;
+    }
+
+
 }

@@ -59,8 +59,9 @@ public class ConstructionSite {
     @FutureOrPresent
     private LocalDate finish;
 
-    @NotNull(message = "this field mustn't be null")
-    @Column(name = "construction_site_status")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "construction_site_status",
+            columnDefinition = "ENUM('ACTIVE','NON_STARTED','FINISHED','FROZEN','CLOSED')")
     private ConstructionSiteStatus status;
 
     @AssertFalse

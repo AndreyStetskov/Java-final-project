@@ -60,6 +60,7 @@ public class Offer {
     @Column(name = "duration")
     private LocalDateTime duration;
 
+//    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private OfferStatus status;
 

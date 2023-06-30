@@ -9,6 +9,6 @@ public interface InvoiceCRUDService {
     Invoice add(Invoice invoice);
     List<Invoice> getAllInvoices();
     Invoice getInvoiceByID(long id);
-    Invoice deleteInvoiceByName(String name, Invoice update);
-    Invoice deleteInvoiceByID(long id, Invoice update);
+    void deleteInvoiceByName(String name);
+    void deleteInvoiceByID(long id);
 }

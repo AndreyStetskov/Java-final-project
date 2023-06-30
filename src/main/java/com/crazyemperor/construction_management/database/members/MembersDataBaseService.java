@@ -9,6 +9,6 @@ public interface MembersDataBaseService {
     Member addMember(Member member);
     List<Member> getMembers();
     Member getByID(long id);
-    Member deleteByOrganisation(long id, Member update);
-    Member deleteByID(long id, Member update);
+    void deleteByOrganisation(long id);
+    void deleteByID(long id);
 }

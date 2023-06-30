@@ -9,6 +9,6 @@ public interface OrganisationDataBaseService {
     Organisation addOrganisation(Organisation organisation);
     List<Organisation> getOrganisations();
     Organisation getByID(long id);
-    Organisation deleteByName(String name, Organisation organisation);
-    Organisation deleteByID(long id, Organisation organisation);
+    void deleteByName(String name);
+    void deleteByID(long id);
 }

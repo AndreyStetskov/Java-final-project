@@ -9,6 +9,6 @@ public interface MemberCRUDService {
     Member add(Member member);
     List<Member> getAllMembers();
     Member getMemberByID(int id);
-    Member deleteMemberByOrganisation(Long id, Member delete);
-    Member deleteMemberByID(int id, Member delete);
+    void deleteMemberByOrganisation(Long id);
+    void deleteMemberByID(int id);
 }

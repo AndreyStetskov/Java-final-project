@@ -9,6 +9,7 @@ public interface OfferDataBaseService {
     Offer addOffer(Offer offer);
     List<Offer> getOffers();
     Offer getByID(long id);
-    Offer deleteByName(String name, Offer delete);
-    Offer deleteByID(long id, Offer delete);
+    Offer getByTitle(String name);
+    void deleteByName(String name);
+    void deleteByID(long id);
 }
