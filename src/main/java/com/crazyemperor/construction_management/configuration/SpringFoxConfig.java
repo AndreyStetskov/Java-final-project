@@ -1,4 +1,4 @@
-package com.crazyemperor.construction_management;
+package com.crazyemperor.construction_management.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

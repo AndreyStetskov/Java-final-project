@@ -21,7 +21,7 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
 
-    @PostMapping(value = "/create_new_invoice")
+    @PostMapping(value = "/create-new-invoice")
     public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
         invoiceCRUDService.add(invoice);
         return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
@@ -69,7 +69,7 @@ public class InvoiceController {
     }
 
     @SneakyThrows
-    @PutMapping(value = "/{memberId}/unpaid/select")
+    @PutMapping(value = "/{memberId}/unpaid/for-paid")
     public ResponseEntity<List<Invoice>> selected(@PathVariable Long memberId) {
         List<Invoice> selected = invoiceService.selectedForPay(memberId);
 

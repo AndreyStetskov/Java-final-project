@@ -23,14 +23,14 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
 
 
     @Override
-    @CacheEvict("Members")
+    @CacheEvict("members")
     public Member addMember(Member constructionSite) {
         return memberRepository.save(constructionSite);
     }
 
     @SneakyThrows
     @Override
-    @Cacheable("Members")
+    @Cacheable("members")
     public List<Member> getMembers() {
         Optional<List<Member>> members = Optional.of(memberRepository.findAll());
 
@@ -40,7 +40,7 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
 
     @SneakyThrows
     @Override
-    @Cacheable("Members")
+    @Cacheable("members")
     public Member getByID(long id) {
         return memberRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);
@@ -48,7 +48,7 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
 
     @SneakyThrows
     @Override
-    @CacheEvict("Members")
+    @CacheEvict("members")
     public void deleteByOrganisation(long id) {
         Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByOrganisationId(id));
         if (memberOptional.isPresent()) {
@@ -61,7 +61,7 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
 
     @SneakyThrows
     @Override
-    @CacheEvict("Members")
+    @CacheEvict("members")
     public void deleteByID(long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);

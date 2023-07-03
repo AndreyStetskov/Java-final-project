@@ -22,14 +22,14 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
 
 
     @Override
-    @CacheEvict("Offers")
+    @CacheEvict("offers")
     public Offer addOffer(Offer offer) {
         return offerRepository.save(offer);
     }
 
     @SneakyThrows
     @Override
-    @Cacheable("Offers")
+    @Cacheable("offers")
     public List<Offer> getOffers() {
         Optional<List<Offer>> offers = Optional.of(offerRepository.findAll());
 
@@ -39,7 +39,7 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
 
     @SneakyThrows
     @Override
-    @Cacheable("Offers")
+    @Cacheable("offers")
     public Offer getByID(long id) {
         return offerRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);
@@ -47,7 +47,7 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
 
     @SneakyThrows
     @Override
-    @Cacheable("Offers")
+    @Cacheable("offers")
     public Offer getByTitle(String name) {
         Optional<Offer> offers = Optional.ofNullable(offerRepository.findByTitle(name));
 
@@ -57,7 +57,7 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
 
     @SneakyThrows
     @Override
-    @CacheEvict("Offers")
+    @CacheEvict("offers")
     public void deleteByName(String name) {
         Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findByTitle(name));
         if (offerOptional.isPresent()) {
@@ -70,7 +70,7 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
 
     @SneakyThrows
     @Override
-    @CacheEvict("Offers")
+    @CacheEvict("offers")
     public void deleteByID(long id) {
         Offer offers =offerRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);

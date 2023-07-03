@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -14,13 +15,13 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "ConstructionSites", schema = "public")
+@Table(name = "construction_sites", schema = "public")
 public class ConstructionSite {
 
     @Id
     @Column(name = "construction_site_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
@@ -60,8 +61,8 @@ public class ConstructionSite {
     private LocalDate finish;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "construction_site_status",
-            columnDefinition = "ENUM('ACTIVE','NON_STARTED','FINISHED','FROZEN','CLOSED')")
+    @Value("${entity.enum.building.status-value}")
+    @Column(name = "construction_site_status", columnDefinition = "smallint")
     private ConstructionSiteStatus status;
 
     @AssertFalse

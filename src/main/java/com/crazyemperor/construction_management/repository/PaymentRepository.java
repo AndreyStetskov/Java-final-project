@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    Payment findById(final long id);
     Payment findByTitle(final String name);
-
-
+//    @Query("INSERT INTO Payments(payment_ID, title, created_at, invoice_id, acceptor_id, offerer_id, description) " +
+//            "VALUE ")
+//    Payment create();
 }

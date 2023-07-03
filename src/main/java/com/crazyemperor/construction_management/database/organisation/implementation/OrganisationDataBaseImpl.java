@@ -23,14 +23,14 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
 
 
     @Override
-    @CacheEvict("Organisations")
+    @CacheEvict("organisations")
     public Organisation addOrganisation(Organisation offer) {
         return organisationRepository.save(offer);
     }
 
     @SneakyThrows
     @Override
-    @Cacheable("Organisations")
+    @Cacheable("organisations")
     public List<Organisation> getOrganisations() {
 
         Optional<List<Organisation>> organisations = Optional.of(organisationRepository.findAll());
@@ -41,7 +41,7 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
 
     @SneakyThrows
     @Override
-    @Cacheable("Organisations")
+    @Cacheable("organisations")
     public Organisation getByID(long id) {
 
         return organisationRepository.findById(id)
@@ -50,7 +50,7 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
 
     @SneakyThrows
     @Override
-    @CacheEvict("Organisations")
+    @CacheEvict("organisations")
     public void deleteByName(String name) {
         Optional<Organisation> organisationOptional = Optional.ofNullable(organisationRepository.findByName(name));
         if (organisationOptional.isPresent()) {
@@ -63,7 +63,7 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
 
     @SneakyThrows
     @Override
-    @CacheEvict("Organisations")
+    @CacheEvict("organisations")
     public void deleteByID(long id) {
         Organisation organisation = organisationRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);

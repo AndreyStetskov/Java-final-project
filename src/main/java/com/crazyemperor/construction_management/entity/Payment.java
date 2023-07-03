@@ -9,11 +9,11 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "Payments", schema = "public")
+@Table(name = "payments", schema = "public")
 public class Payment {
 
     @Id
-    @Column(name = "payment_ID")
+    @Column(name = "payment_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -25,17 +25,9 @@ public class Payment {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @Basic(optional = false)
-    @Column(name = "invoice_id")
-    private Long invoiceId;
-
-    @Basic(optional = false)
-    @Column(name = "acceptor_id")
-    private Long acceptorId;
-
-    @Basic(optional = false)
-    @Column(name = "offerer_id")
-    private Long offererId;
+    @ManyToOne
+    @JoinColumn(name = "invoice_id", referencedColumnName = "invoice_id")
+    private Invoice paid;
 
     @Basic(optional = false)
     @Column(name = "description")

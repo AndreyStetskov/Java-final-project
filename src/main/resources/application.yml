@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:h2:mem:shedlock_DB;INIT=CREATE SCHEMA IF NOT EXISTS shedlock;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: postgres
+    password: 1mperator
+  cloud:
+    openfeign:
+      client:
+        config:
+          cheque:
+            url: http://localhost:7070/api/paying
+            connect-timeout: 1_200_000
+            read-timeout: 1_200_000
+resilience4j:
+  retry:
+    instances:
+      bank-retry:
+        max-attempts: 3
+        wait-duration:
+          seconds: 3
+        retry-exceptions:
+          - feign.FeignException.BadGateway
+          - feign.FeignException.BadRequest
+          - feign.FeignException.NotFound
+  circuitbreaker:
+    instances:
+      bank-breaker:
+        sliding-window-type: count_based
+        sliding-window-size: 5
+        failure-rate-threshold: 75
+        minimum-number-of-calls: 5
+        wait-duration-in-open-state:
+          seconds: 10
+        max-wait-duration-in-half-open-state:
+          seconds: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        permitted-number-of-calls-in-half-open-state: 2

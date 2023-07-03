@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "Members", schema = "public")
+@Table(name = "members", schema = "public")
 public class Member {
 
     @Id
@@ -32,15 +33,16 @@ public class Member {
     private Timestamp createAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", columnDefinition = "smallint")
     private Set<MemberType> type;
 
     @PositiveOrZero
     @Column(name = "budget", precision = 10)
     private BigDecimal budget;
 
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Value("${entity.enum.member.status-value}")
+    @Column(name = "status", columnDefinition = "smallint")
     private MemberStatus status;
 
     @AssertFalse

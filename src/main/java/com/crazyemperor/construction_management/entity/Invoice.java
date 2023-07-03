@@ -5,15 +5,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Data
 @Entity
-@Table(name = "Invoices", schema = "public")
+@Table(name = "invoices", schema = "public")
 public class Invoice {
 
     @Id
@@ -52,11 +54,16 @@ public class Invoice {
     @FutureOrPresent
     private LocalDate deadline;
 
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "paid_status")
+    @Enumerated(EnumType.STRING)
+    @Value("${entity.enum.invoice.status-value}")
+    @Column(name = "paid_status", columnDefinition = "smallint")
     private InvoiceStatus paidStatus;
 
     @AssertFalse
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+
+    @OneToMany(mappedBy = "paid", cascade = CascadeType.ALL)
+    private Set<Payment> paid;
 }

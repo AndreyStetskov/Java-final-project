@@ -19,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
 
-    @PostMapping(value = "/create_new_member")
+    @PostMapping(value = "/create-new-member")
     public ResponseEntity<Member> createInvoice(@RequestBody Member member) {
         memberCRUDService.add(member);
         return ResponseEntity.status(HttpStatus.CREATED).body(member);
@@ -49,14 +49,14 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/delete/{organisation_id}")
-    public ResponseEntity<Long> deleteByOrganisation(@PathVariable long organisation_id) {
-        memberCRUDService.deleteMemberByOrganisation(organisation_id);
+    @PutMapping(value = "/delete/{organisationId}")
+    public ResponseEntity<Long> deleteByOrganisation(@PathVariable long organisationId) {
+        memberCRUDService.deleteMemberByOrganisation(organisationId);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/find/with_gmail")
+    @GetMapping(value = "/find/with-gmail")
     public ResponseEntity<List<Member>> getWithGmail() {
         List<Member> memberWithGmail = memberService.getMembersWithGmail();
 

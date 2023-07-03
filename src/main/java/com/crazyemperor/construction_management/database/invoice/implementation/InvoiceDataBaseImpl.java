@@ -23,14 +23,14 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
 
 
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public Invoice addInvoice(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
 
     @SneakyThrows
     @Override
-    @Cacheable("Invoices")
+    @Cacheable("invoices")
     public List<Invoice> getInvoices() {
         Optional<List<Invoice>> invoices = Optional.of(invoiceRepository.findAll());
 
@@ -40,7 +40,7 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
 
     @SneakyThrows
     @Override
-    @Cacheable("Invoices")
+    @Cacheable("invoices")
     public Invoice getByID(long id) {
         return invoiceRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);
@@ -48,7 +48,7 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
 
     @SneakyThrows
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public void deleteByName(String name) {
         Optional<Invoice> invoiceOptional = Optional.ofNullable(invoiceRepository.findByTitle(name));
         if (invoiceOptional.isPresent()) {
@@ -61,7 +61,7 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
 
     @SneakyThrows
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public void deleteByID(long id) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);

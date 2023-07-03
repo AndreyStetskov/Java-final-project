@@ -17,7 +17,7 @@ public class OrganisationController {
     private final OrganisationCRUDService organisationCRUDService;
 
 
-    @PostMapping(value = "/create_new_organisation")
+    @PostMapping(value = "/create-new-organisation")
     public ResponseEntity<Organisation> createOffer(@RequestBody Organisation organisation) {
         organisationCRUDService.add(organisation);
         return ResponseEntity.status(HttpStatus.CREATED).body(organisation);

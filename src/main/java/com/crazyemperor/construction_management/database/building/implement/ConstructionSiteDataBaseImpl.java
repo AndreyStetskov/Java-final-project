@@ -21,14 +21,14 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
 
 
     @Override
-    @CacheEvict("ConstructionSites")
+    @CacheEvict("construction_sites")
     public ConstructionSite addConstructionSite(ConstructionSite constructionSite) {
         return constructionSiteRepository.save(constructionSite);
     }
 
     @SneakyThrows
     @Override
-    @Cacheable("ConstructionSites")
+    @Cacheable("construction_sites")
     public List<ConstructionSite> getConstructionSites() {
         Optional<List<ConstructionSite>> constructionSites = Optional.of(constructionSiteRepository.findAll());
 
@@ -38,7 +38,7 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
 
     @SneakyThrows
     @Override
-    @Cacheable("ConstructionSites")
+    @Cacheable("construction_sites")
     public ConstructionSite getByID(long id) {
         return constructionSiteRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);
@@ -46,7 +46,7 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
 
     @SneakyThrows
     @Override
-    @CacheEvict("ConstructionSites")
+    @CacheEvict("construction_sites")
     public void deleteByName(String name) {
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(name));
         if (constructionSiteOptional.isPresent()) {
@@ -59,7 +59,7 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
 
     @Override
     @SneakyThrows
-    @CacheEvict("ConstructionSites")
+    @CacheEvict("construction_sites")
     public void deleteByID(long id) {
         ConstructionSite constructionSite = constructionSiteRepository.findById(id)
                 .orElseThrow(DataNotFoundException::new);

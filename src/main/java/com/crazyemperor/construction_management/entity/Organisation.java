@@ -9,13 +9,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "Organisations", schema = "public")
+@Table(name = "organisations", schema = "public")
 public class Organisation {
 
     @Id
@@ -43,7 +44,7 @@ public class Organisation {
     @Column(name = "registration")
     private LocalDate registration;
 
-    @NotBlank
+    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "location")
     private String location;
 
@@ -62,8 +63,9 @@ public class Organisation {
     @Column(name = "web_site")
     private String site;
 
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Value("${entity.enum.organisation.status-value}")
+    @Column(name = "status", columnDefinition = "smallint")
     private OrganisationStatus status;
 
     @AssertFalse
