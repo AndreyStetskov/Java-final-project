@@ -1,7 +1,6 @@
 package com.crazyemperor.construction_management.database.building;
 
 import com.crazyemperor.construction_management.entity.ConstructionSite;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface ConstructionSiteDataBaseService {
      * Adding construction some site
      * @param constructionSite - A object of construction
      */
-    ConstructionSite addConstructionSite(ConstructionSite constructionSite);
+    void addConstructionSite(ConstructionSite constructionSite);
     /**
      * Retrieving all construction sites
      * @return List of existing construction sites

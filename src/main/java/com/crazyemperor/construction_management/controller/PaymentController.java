@@ -22,9 +22,10 @@ public class PaymentController {
 
 
     @PostMapping(value = "/create-new-payment")
-    public ResponseEntity<Payment> create(@RequestBody Payment payment, @RequestBody BankResponse response) {
+    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment, @RequestBody BankResponse response) {
         paymentService.addPayment(payment, response);
-        return ResponseEntity.status(HttpStatus.CREATED).body(payment);
+
+        return response.success() ? ResponseEntity.status(HttpStatus.CREATED).body(payment) : ResponseEntity.badRequest().build();
     }
 
     @GetMapping(value = "/find/all")
@@ -33,7 +34,8 @@ public class PaymentController {
 
         if (payments != null && !payments.isEmpty()) {
             return ResponseEntity.ok(payments);
-        } else return ResponseEntity.noContent().build();
+        }
+        else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")

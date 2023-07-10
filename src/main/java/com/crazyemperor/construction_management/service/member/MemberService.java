@@ -1,7 +1,7 @@
 package com.crazyemperor.construction_management.service.member;
 
 import com.crazyemperor.construction_management.entity.Member;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
+import com.crazyemperor.construction_management.entity.Payment;
 
 import java.util.List;
 
@@ -25,5 +25,5 @@ public interface MemberService {
      * @throws DataNotFoundException
      *          thrown if no one members with e-mail was found.
      */
-    List<Member> geAllPaidOrganisations();
+    List<Payment> geAllPaidOrganisations();
 }

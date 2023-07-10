@@ -3,7 +3,6 @@ package com.crazyemperor.construction_management.database.building.implement;
 import com.crazyemperor.construction_management.database.building.ConstructionSiteDataBaseService;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.repository.ConstructionSiteRepository;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,8 +21,8 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
 
     @Override
     @CacheEvict("construction_sites")
-    public ConstructionSite addConstructionSite(ConstructionSite constructionSite) {
-        return constructionSiteRepository.save(constructionSite);
+    public void addConstructionSite(ConstructionSite constructionSite) {
+        constructionSiteRepository.save(constructionSite);
     }
 
     @SneakyThrows
@@ -49,12 +48,15 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
     @CacheEvict("construction_sites")
     public void deleteByName(String name) {
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(name));
-        if (constructionSiteOptional.isPresent()) {
-            ConstructionSite constructionSite = constructionSiteOptional.get();
-            constructionSite.setDeleted(true);
-            constructionSiteRepository.save(constructionSite);
-        }
-        else throw new DataNotFoundException();
+
+        if (constructionSiteOptional.isPresent()) throw new DataNotFoundException();
+
+        ConstructionSite constructionSite = constructionSiteOptional.get();
+
+        if (constructionSite.isDeleted()) throw new IllegalArgumentException(); // ANOTHER EXCEPTION
+
+        constructionSite.setDeleted(true);
+        constructionSiteRepository.save(constructionSite);
     }
 
     @Override

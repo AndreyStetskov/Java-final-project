@@ -71,7 +71,7 @@ public class OfferController {
     }
 
     @GetMapping(value = "/{memberId}/cheapest/{amount}")
-    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable long memberId, @PathVariable BigDecimal amount) {
+    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable long memberId, @RequestBody BigDecimal amount) {
         List<Offer> cheapestOffers = offerService.getCheaperThan(memberId, amount);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
@@ -89,10 +89,5 @@ public class OfferController {
         List<Offer> fastestOffers = offerService.getFasterThen(memberId, days);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
-    }
-
-    @PutMapping(value = "/deactivate")
-    public void deactivate() {
-        offerService.irrelevant();
     }
 }

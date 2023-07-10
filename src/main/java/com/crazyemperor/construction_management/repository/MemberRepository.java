@@ -1,6 +1,7 @@
 package com.crazyemperor.construction_management.repository;
 
 import com.crazyemperor.construction_management.entity.Member;
+import com.crazyemperor.construction_management.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,5 +25,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "LEFT JOIN ConstructionSite building ON bill.id = building.id " +
             "LEFT JOIN Member member ON building.id = member.id " +
             "LEFT JOIN Organisation org ON member.id = org.id")
-    List<Member> findAllPaidMembers();
+    List<Payment> findAllPaidMembers();
 }

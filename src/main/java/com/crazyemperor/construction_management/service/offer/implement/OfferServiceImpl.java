@@ -3,7 +3,6 @@ package com.crazyemperor.construction_management.service.offer.implement;
 import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.offer.OfferService;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -81,7 +80,7 @@ public class OfferServiceImpl implements OfferService {
         List<Offer> newList = new ArrayList<>();
 
         for (Offer offer : offerList) {
-            if (offer.getAmount().compareTo(amount) <= 0) {
+            if (offer.getAmount().compareTo(amount) >= 0) {
                 newList.add(offer);
             }
         }

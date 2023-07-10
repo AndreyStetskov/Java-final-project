@@ -8,7 +8,6 @@ import com.crazyemperor.construction_management.entity.auxillirary.MemberType;
 import com.crazyemperor.construction_management.repository.ConstructionSiteRepository;
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.building.ConstructionSiteService;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -86,7 +85,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
     @SneakyThrows
     @Override
-    public ConstructionSite selectedConstructor(ConstructionSite constructor, Offer selected) {
+    public void selectedConstructor(ConstructionSite constructor, Offer selected) {
         Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findWithMembersByTitle(selected.getTitle()));
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(constructor.getTitle()));
 
@@ -100,12 +99,10 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
             constructionSiteRepository.save(constructor);
         }
         else throw new DataNotFoundException();
-
-        return constructor;
     }
 
     @Override
-    public ConstructionSite selectedEngineering(ConstructionSite engineering, Offer offer) {
+    public void selectedEngineering(ConstructionSite engineering, Offer offer) {
         Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findWithMembersByTitle(offer.getTitle()));
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(engineering.getTitle()));
 
@@ -118,11 +115,10 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
             engineering.setEngineering(offer.getAcceptor());
             constructionSiteRepository.save(engineering);
         }
-        return engineering;
     }
 
     @Override
-    public ConstructionSite selectedProtector(ConstructionSite projector, Offer offer) {
+    public void selectedProjector(ConstructionSite projector, Offer offer) {
         Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findWithMembersByTitle(offer.getTitle()));
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(projector.getTitle()));
 
@@ -135,8 +131,5 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
             projector.setProjector(offer.getAcceptor());
             constructionSiteRepository.save(projector);
         }
-        return projector;
     }
-
-
 }

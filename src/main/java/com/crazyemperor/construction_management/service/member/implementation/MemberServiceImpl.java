@@ -1,9 +1,9 @@
 package com.crazyemperor.construction_management.service.member.implementation;
 
 import com.crazyemperor.construction_management.entity.Member;
+import com.crazyemperor.construction_management.entity.Payment;
 import com.crazyemperor.construction_management.repository.MemberRepository;
 import com.crazyemperor.construction_management.service.member.MemberService;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -32,8 +32,8 @@ public class MemberServiceImpl implements MemberService {
     @SneakyThrows
     @Override
     @Transactional
-    public List<Member> geAllPaidOrganisations() {
-        Optional<List<Member>> members = Optional.ofNullable(memberRepository.findAllPaidMembers());
+    public List<Payment> geAllPaidOrganisations() {
+        Optional<List<Payment>> members = Optional.ofNullable(memberRepository.findAllPaidMembers());
 
         return members
                 .orElseThrow(DataNotFoundException::new);

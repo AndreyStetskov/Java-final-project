@@ -4,7 +4,9 @@ import com.crazyemperor.construction_management.entity.auxillirary.ConstructionS
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -14,6 +16,8 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "construction_sites", schema = "public")
 public class ConstructionSite {

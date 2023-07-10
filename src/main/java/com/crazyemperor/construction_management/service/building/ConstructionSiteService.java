@@ -2,7 +2,6 @@ package com.crazyemperor.construction_management.service.building;
 
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.entity.Offer;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -45,7 +44,7 @@ public interface ConstructionSiteService {
      * @throws IllegalArgumentException
      *          thrown if status of member isn't active.
      */
-    ConstructionSite selectedConstructor(ConstructionSite constructor, Offer bestProposal);
+    void selectedConstructor(ConstructionSite constructor, Offer bestProposal);
     /**
      * Appoints a participant as a engineering organisation from a selected proposal and changes a status of the participant
      * @throws DataNotFoundException
@@ -53,7 +52,7 @@ public interface ConstructionSiteService {
      * @throws IllegalArgumentException
      *          thrown if status of member isn't active.
      */
-    ConstructionSite selectedEngineering(ConstructionSite engineering, Offer bestProposal);
+    void selectedEngineering(ConstructionSite engineering, Offer bestProposal);
     /**
      * Appoints a participant as a protector from a selected proposal and changes a status of the participant
      * @throws DataNotFoundException
@@ -61,5 +60,5 @@ public interface ConstructionSiteService {
      * @throws IllegalArgumentException
      *          thrown if status of member isn't active.
      */
-    ConstructionSite selectedProtector(ConstructionSite protector, Offer bestProposal);
+    void selectedProjector(ConstructionSite projector, Offer bestProposal);
 }

@@ -35,7 +35,7 @@ public class ScheduleService {
     public void offerIrrelevant() {
         offerRepository.deactivateExpired();
 
-        log.info("offer is irrelevant since "+
+        log.info("offer is irrelevant since " +
                 LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
     }
 

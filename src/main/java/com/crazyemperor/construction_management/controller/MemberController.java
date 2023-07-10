@@ -2,6 +2,7 @@ package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.crud.member.MemberCRUDService;
 import com.crazyemperor.construction_management.entity.Member;
+import com.crazyemperor.construction_management.entity.Payment;
 import com.crazyemperor.construction_management.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,13 @@ public class MemberController {
 
 
     @PostMapping(value = "/create-new-member")
-    public ResponseEntity<Member> createInvoice(@RequestBody Member member) {
+    public ResponseEntity<Member> createMember(@RequestBody Member member) {
         memberCRUDService.add(member);
         return ResponseEntity.status(HttpStatus.CREATED).body(member);
     }
 
     @GetMapping(value = "/find/all")
-    public ResponseEntity<List<Member>> allInvoices() {
+    public ResponseEntity<List<Member>> allMembers() {
         List<Member> members = memberCRUDService.getAllMembers();
 
         if (members != null && !members.isEmpty()) {
@@ -36,14 +37,14 @@ public class MemberController {
     }
 
     @GetMapping(value = "/find/{id}")
-    public ResponseEntity<Member> getMemberById(@PathVariable int id) {
+    public ResponseEntity<Member> getMemberById(@PathVariable long id) {
         Member member = memberCRUDService.getMemberByID(id);
 
         return member != null ? ResponseEntity.ok(member) : ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Long> deleteByID(@PathVariable int id) {
+    public ResponseEntity<Long> deleteByID(@PathVariable long id) {
         memberCRUDService.deleteMemberByID(id);
 
         return ResponseEntity.ok().build();
@@ -67,8 +68,8 @@ public class MemberController {
     }
 
     @GetMapping(value = "/find/all/paid")
-    public ResponseEntity<List<Member>> getPaid() {
-        List<Member> allOrganisations = memberService.geAllPaidOrganisations();
+    public ResponseEntity<List<Payment>> getPaid() {
+        List<Payment> allOrganisations = memberService.geAllPaidOrganisations();
 
         if (allOrganisations != null && !allOrganisations.isEmpty()) {
             return ResponseEntity.ok(allOrganisations);

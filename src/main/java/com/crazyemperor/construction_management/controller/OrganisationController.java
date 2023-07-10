@@ -18,13 +18,13 @@ public class OrganisationController {
 
 
     @PostMapping(value = "/create-new-organisation")
-    public ResponseEntity<Organisation> createOffer(@RequestBody Organisation organisation) {
+    public ResponseEntity<Organisation> createOrganisation(@RequestBody Organisation organisation) {
         organisationCRUDService.add(organisation);
         return ResponseEntity.status(HttpStatus.CREATED).body(organisation);
     }
 
     @GetMapping(value = "/find/all")
-    public ResponseEntity<List<Organisation>> allOffers() {
+    public ResponseEntity<List<Organisation>> allOrganisations() {
         List<Organisation> organisations = organisationCRUDService.getAllOrganisations();
 
         if (organisations != null && !organisations.isEmpty()) {
@@ -35,7 +35,7 @@ public class OrganisationController {
 
     @GetMapping(value = "/find/{id}")
     public ResponseEntity<Organisation> getOrganisationById(@PathVariable Long id) {
-        Organisation organisation = organisationCRUDService.getByOrganisationID(id);
+        Organisation organisation = organisationCRUDService.getOrganisationByID(id);
 
         return organisation != null ? ResponseEntity.ok(organisation) : ResponseEntity.noContent().build();
     }
