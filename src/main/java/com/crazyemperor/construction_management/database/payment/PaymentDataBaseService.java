@@ -1,7 +1,7 @@
 package com.crazyemperor.construction_management.database.payment;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Payment;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface PaymentDataBaseService {
     /**
      * Retrieving all payments
      * @return List of existing payments
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no payments were found.
      */
     List<Payment> getPayments();
@@ -23,7 +23,7 @@ public interface PaymentDataBaseService {
      * Retrieving a payment by ID
      * @param id - ID of a payment to be found
      * @return A payment by ID
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no payment was found.
      */
     Payment getByID(long id);
@@ -31,7 +31,7 @@ public interface PaymentDataBaseService {
      * Retrieving a payment by ID
      * @param name - name of a payment to be found
      * @return A payment by name
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no payment was found.
      */
     Payment getByName(String name);

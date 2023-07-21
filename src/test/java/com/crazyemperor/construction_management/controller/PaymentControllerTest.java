@@ -2,6 +2,9 @@ package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.bank.model.BankResponse;
 import com.crazyemperor.construction_management.crud.payment.PaymentCRUDService;
+import com.crazyemperor.construction_management.entity.Invoice;
+import com.crazyemperor.construction_management.entity.Member;
+import com.crazyemperor.construction_management.entity.Organisation;
 import com.crazyemperor.construction_management.entity.Payment;
 import com.crazyemperor.construction_management.service.payment.PaymentService;
 import org.junit.jupiter.api.Test;
@@ -101,6 +104,37 @@ class PaymentControllerTest extends com.crazyemperor.construction_management.Moc
 
 //        when
         ResponseEntity<Payment> actual = paymentController.getPaymentById(idPayment);
+
+//        then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getPaid_ReturnListOfAllPaidMembersOfTwoObjects_Success() {
+
+//        given
+        Payment payment = new Payment();
+        payment.setPaid(new Invoice());
+        Member member = new Member();
+        List<Payment> paymentList = new ArrayList<>();
+        payment.getPaid().setPayer(member);
+        payment.getPaid().getPayer().setOrganisation(new Organisation());
+        payment.getPaid().getPayer().getOrganisation().setName("Pupkin and Ko");
+        paymentList.add(payment);
+
+        Payment paymentTwo = new Payment();
+        paymentTwo.setPaid(new Invoice());
+        paymentTwo.getPaid().setPayer(new Member());
+        paymentTwo.getPaid().getPayer().setOrganisation(new Organisation());
+        paymentTwo.getPaid().getPayer().getOrganisation().setName("The Talented and Gifted");
+        paymentList.add(paymentTwo);
+
+        ResponseEntity<List<Payment>> expected = new ResponseEntity<>(paymentList, HttpStatus.OK);
+
+        when(paymentService.geAllPaidOrganisations()).thenReturn(paymentList);
+
+//        when
+        ResponseEntity<List<Payment>> actual = paymentController.getPaid();
 
 //        then
         assertEquals(expected, actual);

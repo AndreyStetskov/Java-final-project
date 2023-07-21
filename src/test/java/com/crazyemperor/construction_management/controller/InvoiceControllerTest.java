@@ -93,7 +93,7 @@ class InvoiceControllerTest extends com.crazyemperor.construction_management.Moc
 //        given
         invoice.setDeleted(true);
 
-        ResponseEntity<Invoice> expected = new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Long> expected = new ResponseEntity<>(HttpStatus.OK);
 
 //        when
         ResponseEntity<Long> actual = invoiceController.deleteByID(anyLong());

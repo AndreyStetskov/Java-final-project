@@ -4,7 +4,6 @@ import com.crazyemperor.construction_management.entity.auxillirary.MemberStatus;
 import com.crazyemperor.construction_management.entity.auxillirary.MemberType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertFalse;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,7 +31,7 @@ public class Member {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "type", columnDefinition = "smallint")
     private Set<MemberType> type;
 
@@ -40,7 +39,7 @@ public class Member {
     @Column(name = "budget", precision = 10)
     private BigDecimal budget;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Value("${entity.enum.member.status-value}")
     @Column(name = "status", columnDefinition = "smallint")
     private MemberStatus status;

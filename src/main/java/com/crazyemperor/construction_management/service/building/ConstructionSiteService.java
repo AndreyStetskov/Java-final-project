@@ -1,5 +1,6 @@
 package com.crazyemperor.construction_management.service.building;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.entity.Offer;
 
@@ -17,14 +18,14 @@ public interface ConstructionSiteService {
     /**
      * Calculation of costs of all construction sites
      * @return A sum of all construction sites
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no construction sites were found.
      */
     BigDecimal getSumAllBuildings();
     /**
      * Calculation of costs of current construction sites
      * @return A sum of all construction sites
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no current construction sites were found.
      */
     BigDecimal getSumCurrentBuildings();
@@ -32,14 +33,15 @@ public interface ConstructionSiteService {
      * Calculation of costs of all construction sites which were registered after a certain date
      * @param date - a single point in time that it is recommended to record the date as a year, then a month, then a day: YYYY-MM-DD.
      * @return A sum of all construction sites
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no construction sites were found.
      */
     BigDecimal getSumBuildingsAfterDate(LocalDate date);
 
     /**
      * Appoints a participant as a general constructor from a selected proposal and changes a status of the participant
-     * @throws DataNotFoundException
+     * @param bestProposal -some selected offer
+     * @throws NoDataFoundException
      *          thrown if no offer was found.
      * @throws IllegalArgumentException
      *          thrown if status of member isn't active.
@@ -47,7 +49,7 @@ public interface ConstructionSiteService {
     void selectedConstructor(ConstructionSite constructor, Offer bestProposal);
     /**
      * Appoints a participant as a engineering organisation from a selected proposal and changes a status of the participant
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no offer was found.
      * @throws IllegalArgumentException
      *          thrown if status of member isn't active.
@@ -55,7 +57,7 @@ public interface ConstructionSiteService {
     void selectedEngineering(ConstructionSite engineering, Offer bestProposal);
     /**
      * Appoints a participant as a protector from a selected proposal and changes a status of the participant
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no offer was found.
      * @throws IllegalArgumentException
      *          thrown if status of member isn't active.

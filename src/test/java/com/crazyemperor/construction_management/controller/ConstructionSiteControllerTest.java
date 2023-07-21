@@ -96,7 +96,7 @@ class ConstructionSiteControllerTest extends com.crazyemperor.construction_manag
 
 //        given
         constructionSite.setDeleted(true);
-        ResponseEntity<ConstructionSite> expected = new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Long> expected = new ResponseEntity<>(HttpStatus.OK);
 
 //        when
         ResponseEntity<Long> actual = constructionSiteController.deleteByID(anyLong());

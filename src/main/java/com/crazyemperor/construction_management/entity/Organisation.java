@@ -3,10 +3,7 @@ package com.crazyemperor.construction_management.entity;
 import com.crazyemperor.construction_management.entity.auxillirary.Department;
 import com.crazyemperor.construction_management.entity.auxillirary.OrganisationStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.AssertFalse;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,11 +21,11 @@ public class Organisation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "EIN of organisation field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "ein")
     private String ein;
 
-    @NotBlank
+    @NotBlank(message = "name of organisation field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "name")
     private String name;
 
@@ -36,15 +33,16 @@ public class Organisation {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @NotBlank
+//    @NotBlank(message = "Department field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "department")
     private Department department;
 
-    @NotBlank
+//    @NotBlank(message = "Registration field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "registration")
+    @PastOrPresent
     private LocalDate registration;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "Location field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "location")
     private String location;
 
@@ -63,7 +61,7 @@ public class Organisation {
     @Column(name = "web_site")
     private String site;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Value("${entity.enum.organisation.status-value}")
     @Column(name = "status", columnDefinition = "smallint")
     private OrganisationStatus status;

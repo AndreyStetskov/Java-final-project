@@ -2,7 +2,6 @@ package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.crud.member.MemberCRUDService;
 import com.crazyemperor.construction_management.entity.Member;
-import com.crazyemperor.construction_management.entity.Payment;
 import com.crazyemperor.construction_management.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,9 +49,9 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/delete/{organisationId}")
-    public ResponseEntity<Long> deleteByOrganisation(@PathVariable long organisationId) {
-        memberCRUDService.deleteMemberByOrganisation(organisationId);
+    @PutMapping(value = "/delete/{organisationName}")
+    public ResponseEntity<Long> deleteByOrganisationName(@PathVariable String organisationName) {
+        memberCRUDService.deleteMemberByOrganisationName(organisationName);
 
         return ResponseEntity.ok().build();
     }
@@ -63,16 +62,6 @@ public class MemberController {
 
         if (memberWithGmail != null && !memberWithGmail.isEmpty()) {
             return ResponseEntity.ok(memberWithGmail);
-        }
-        else return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/find/all/paid")
-    public ResponseEntity<List<Payment>> getPaid() {
-        List<Payment> allOrganisations = memberService.geAllPaidOrganisations();
-
-        if (allOrganisations != null && !allOrganisations.isEmpty()) {
-            return ResponseEntity.ok(allOrganisations);
         }
         else return ResponseEntity.noContent().build();
     }

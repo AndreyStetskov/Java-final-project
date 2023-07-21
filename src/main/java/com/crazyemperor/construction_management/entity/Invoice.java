@@ -23,7 +23,7 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of invoice mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -46,15 +46,17 @@ public class Invoice {
     @Column(name = "description")
     private String description;
 
+    @NotNull(message = "amount mustn't be null")
     @Column(name = "amount", precision = 10)
-    @Positive
+    @PositiveOrZero
     private BigDecimal amount;
 
+    @NotNull(message = "Be sure to include a deadline")
     @Column(name = "deadline")
     @FutureOrPresent
     private LocalDate deadline;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Value("${entity.enum.invoice.status-value}")
     @Column(name = "paid_status", columnDefinition = "smallint")
     private InvoiceStatus paidStatus;

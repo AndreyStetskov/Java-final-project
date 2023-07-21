@@ -27,7 +27,7 @@ public class ConstructionSite {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of construction sites mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -51,7 +51,7 @@ public class ConstructionSite {
     @JoinColumn(name = "engineering_id", referencedColumnName = "member_id")
     private Member engineering;
 
-    @NotNull(message = "this field mustn't be null")
+    @NotNull(message = "amount mustn't be null")
     @PositiveOrZero
     @Column(name = "amount", precision = 10)
     private BigDecimal amount;
@@ -64,7 +64,7 @@ public class ConstructionSite {
     @FutureOrPresent
     private LocalDate finish;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Value("${entity.enum.building.status-value}")
     @Column(name = "construction_site_status", columnDefinition = "smallint")
     private ConstructionSiteStatus status;

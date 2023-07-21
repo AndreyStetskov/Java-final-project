@@ -1,4 +1,4 @@
-package com.crazyemperor.construction_management.database.building.implement;
+package com.crazyemperor.construction_management.database.building.implementation;
 
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.repository.ConstructionSiteRepository;
@@ -36,10 +36,13 @@ class ConstructionSiteDataBaseImplTest extends com.crazyemperor.construction_man
     }
 
     @Test
-    void getConstructionSites() {
+    void getConstructionSites_ReturnListOfAllConstructionSitesOfThreeObjects_Success() {
 
 //        given
         List<ConstructionSite> expected = new ArrayList<>();
+        expected.add(new ConstructionSite());
+        expected.add(new ConstructionSite());
+        expected.add(new ConstructionSite());
 
         when(constructionSiteRepository.findAll()).thenReturn(expected);
 
@@ -52,7 +55,7 @@ class ConstructionSiteDataBaseImplTest extends com.crazyemperor.construction_man
     }
 
     @Test
-    void getByID() {
+    void getByID_ReturnConstructionSiteById_Success() {
 
 //        given
         ConstructionSite expected = new ConstructionSite();
@@ -68,7 +71,7 @@ class ConstructionSiteDataBaseImplTest extends com.crazyemperor.construction_man
     }
 
     @Test
-    void deleteByName() {
+    void deleteByName_ChangeDeleteStatusToTrue_Success() {
 
 //        given
         String name = anyString();
@@ -89,7 +92,7 @@ class ConstructionSiteDataBaseImplTest extends com.crazyemperor.construction_man
     }
 
     @Test
-    void deleteByID() {
+    void deleteByID_ChangeDeleteStatusToTrue_Success() {
 
 //        given
         Long id = anyLong();

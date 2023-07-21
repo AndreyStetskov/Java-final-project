@@ -33,8 +33,8 @@ public class MemberCRUDServiceImpl implements MemberCRUDService {
     }
 
     @Override
-    public void deleteMemberByOrganisation(Long id) {
-        membersDBService.deleteByOrganisation(id);
+    public void deleteMemberByOrganisationName(String name) {
+        membersDBService.deleteByOrganisationName(name);
     }
 
     @Override

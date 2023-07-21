@@ -1,10 +1,8 @@
 package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.crud.member.MemberCRUDService;
-import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.entity.Organisation;
-import com.crazyemperor.construction_management.entity.Payment;
 import com.crazyemperor.construction_management.service.member.MemberService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,7 +31,6 @@ class MemberControllerTest extends com.crazyemperor.construction_management.Mock
 
     private final Member member = new Member();
     private final List<Member> memberList = new ArrayList<>();
-    private final List<Payment> paymentList = new ArrayList<>();
 
 
     @Test
@@ -105,15 +102,15 @@ class MemberControllerTest extends com.crazyemperor.construction_management.Mock
     }
 
     @Test
-    void deleteByOrganisation_ChangeDeleteStatusToTrue_Success() {
+    void deleteByOrganisationName_ChangeDeleteStatusToTrue_Success() {
 
 //        given
         member.setDeleted(true);
 
-        ResponseEntity<String> expected = new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Long> expected = new ResponseEntity<>(HttpStatus.OK);
 
 //        when
-        ResponseEntity<Long> actual = memberController.deleteByOrganisation(anyLong());
+        ResponseEntity<Long> actual = memberController.deleteByOrganisationName(anyString());
 
 //        then
         assertEquals(expected, actual);
@@ -143,35 +140,6 @@ class MemberControllerTest extends com.crazyemperor.construction_management.Mock
 
 //        when
         ResponseEntity<List<Member>> actual = memberController.getWithGmail();
-
-//        then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void getPaid_ReturnListOfAllPaidMembersOfTwoObjects_Success() {
-
-//        given
-        Payment payment = new Payment();
-        payment.setPaid(new Invoice());
-        payment.getPaid().setPayer(member);
-        payment.getPaid().getPayer().setOrganisation(new Organisation());
-        payment.getPaid().getPayer().getOrganisation().setName("Pupkin and Ko");
-        paymentList.add(payment);
-
-        Payment paymentTwo = new Payment();
-        paymentTwo.setPaid(new Invoice());
-        paymentTwo.getPaid().setPayer(new Member());
-        paymentTwo.getPaid().getPayer().setOrganisation(new Organisation());
-        paymentTwo.getPaid().getPayer().getOrganisation().setName("The Talented and Gifted");
-        paymentList.add(paymentTwo);
-
-        ResponseEntity<List<Payment>> expected = new ResponseEntity<>(paymentList, HttpStatus.OK);
-
-        when(memberService.geAllPaidOrganisations()).thenReturn(paymentList);
-
-//        when
-        ResponseEntity<List<Payment>> actual = memberController.getPaid();
 
 //        then
         assertEquals(expected, actual);

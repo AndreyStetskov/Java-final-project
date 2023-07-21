@@ -1,9 +1,9 @@
 package com.crazyemperor.construction_management.database.organisation.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.organisation.OrganisationDataBaseService;
 import com.crazyemperor.construction_management.entity.Organisation;
 import com.crazyemperor.construction_management.repository.OrganisationRepository;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
@@ -36,7 +36,10 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
         Optional<List<Organisation>> organisations = Optional.of(organisationRepository.findAll());
 
         return organisations
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one organisation found");
+                    return null;
+                });
     }
 
     @SneakyThrows
@@ -45,7 +48,10 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
     public Organisation getByID(long id) {
 
         return organisationRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No organisation found for id %d", id));
+                    return null;
+                });
     }
 
     @SneakyThrows
@@ -58,7 +64,11 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
             organisation.setDeleted(true);
             organisationRepository.save(organisation);
         }
-        else throw new DataNotFoundException();
+        else try {
+            throw new NoDataFoundException("This organisation didn't find");
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
     @SneakyThrows
@@ -66,7 +76,13 @@ public class OrganisationDataBaseImpl implements OrganisationDataBaseService {
     @CacheEvict("organisations")
     public void deleteByID(long id) {
         Organisation organisation = organisationRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    try {
+                        throw new NoDataFoundException(String.format("No organisation found for oid %d", id));
+                    } catch (NoDataFoundException e) {
+                        throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+                    }
+                });
 
             organisation.setDeleted(true);
             organisationRepository.save(organisation);

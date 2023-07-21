@@ -17,7 +17,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of payment mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -26,10 +26,9 @@ public class Payment {
     private Timestamp createAt;
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id", referencedColumnName = "invoice_id")
+    @JoinColumn(name = "paid_invoice_id", referencedColumnName = "invoice_id")
     private Invoice paid;
 
-    @Basic(optional = false)
     @Column(name = "description")
     private String description;
 }

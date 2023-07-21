@@ -1,5 +1,6 @@
-package com.crazyemperor.construction_management.database.building.implement;
+package com.crazyemperor.construction_management.database.building.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.building.ConstructionSiteDataBaseService;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.repository.ConstructionSiteRepository;
@@ -18,29 +19,32 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
 
     private final ConstructionSiteRepository constructionSiteRepository;
 
-
     @Override
     @CacheEvict("construction_sites")
     public void addConstructionSite(ConstructionSite constructionSite) {
         constructionSiteRepository.save(constructionSite);
     }
 
-    @SneakyThrows
     @Override
     @Cacheable("construction_sites")
     public List<ConstructionSite> getConstructionSites() {
         Optional<List<ConstructionSite>> constructionSites = Optional.of(constructionSiteRepository.findAll());
 
         return constructionSites
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                       new NoDataFoundException("No one construction site found");
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
     @Cacheable("construction_sites")
     public ConstructionSite getByID(long id) {
         return constructionSiteRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No construction site found for id %d", id));
+                    return null;
+                });
     }
 
     @SneakyThrows
@@ -49,12 +53,11 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
     public void deleteByName(String name) {
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(name));
 
-        if (constructionSiteOptional.isPresent()) throw new DataNotFoundException();
+        if (constructionSiteOptional.isEmpty()) throw new NoDataFoundException(String.format("No construction site found for name %s", name));
 
         ConstructionSite constructionSite = constructionSiteOptional.get();
 
-        if (constructionSite.isDeleted()) throw new IllegalArgumentException(); // ANOTHER EXCEPTION
-
+        if (constructionSite.isDeleted()) throw new IllegalArgumentException();
         constructionSite.setDeleted(true);
         constructionSiteRepository.save(constructionSite);
     }
@@ -64,7 +67,10 @@ public class ConstructionSiteDataBaseImpl implements ConstructionSiteDataBaseSer
     @CacheEvict("construction_sites")
     public void deleteByID(long id) {
         ConstructionSite constructionSite = constructionSiteRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No construction site found for id %d", id));
+                    return null;
+                });
 
         constructionSite.setDeleted(true);
         constructionSiteRepository.save(constructionSite);

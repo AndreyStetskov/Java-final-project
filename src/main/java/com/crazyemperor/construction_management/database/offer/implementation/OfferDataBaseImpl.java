@@ -1,10 +1,9 @@
 package com.crazyemperor.construction_management.database.offer.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.repository.OfferRepository;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -27,35 +26,40 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
         return offerRepository.save(offer);
     }
 
-    @SneakyThrows
     @Override
     @Cacheable("offers")
     public List<Offer> getOffers() {
         Optional<List<Offer>> offers = Optional.of(offerRepository.findAll());
 
         return offers
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one offer found");
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
     @Cacheable("offers")
     public Offer getByID(long id) {
         return offerRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No offer found for id %d", id));
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
     @Cacheable("offers")
     public Offer getByTitle(String name) {
         Optional<Offer> offers = Optional.ofNullable(offerRepository.findByTitle(name));
 
         return offers
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No offer found for name %ы", name));
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
     @CacheEvict("offers")
     public void deleteByName(String name) {
@@ -65,15 +69,24 @@ public class OfferDataBaseImpl implements com.crazyemperor.construction_manageme
             offer.setDeleted(true);
             offerRepository.save(offer);
         }
-        else throw new DataNotFoundException();
+        else try {
+            throw new NoDataFoundException("This offer didn't find");
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
-    @SneakyThrows
     @Override
     @CacheEvict("offers")
     public void deleteByID(long id) {
         Offer offers =offerRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    try {
+                        throw new NoDataFoundException(String.format("No offer found for oid %d", id));
+                    } catch (NoDataFoundException e) {
+                        throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+                    }
+                });
 
             offers.setDeleted(true);
             offerRepository.save(offers);

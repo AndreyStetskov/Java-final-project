@@ -1,5 +1,6 @@
 package com.crazyemperor.construction_management.service.building.implement;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
 import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.entity.auxillirary.ConstructionSiteStatus;
@@ -9,14 +10,12 @@ import com.crazyemperor.construction_management.repository.ConstructionSiteRepos
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.building.ConstructionSiteService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,16 +45,15 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     @Override
     public BigDecimal getSumCurrentBuildings() {
         List<ConstructionSite> buildingList = constructionSiteRepository.findAll();
-
         BigDecimal sum = BigDecimal.ZERO;
 
         if (buildingList.isEmpty()) return sum;
 
-        buildingList.stream()
+        List<ConstructionSite> filterBuilding = buildingList.stream()
                 .filter(current -> current.getStatus().equals(ConstructionSiteStatus.ACTIVE))
-                .collect(Collectors.toList());
+                .toList();
 
-        for (ConstructionSite building : buildingList) {
+        for (ConstructionSite building : filterBuilding) {
             BigDecimal result = sum.add(building.getAmount());
             sum = result;
         }
@@ -66,16 +64,15 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     @Override
     public BigDecimal getSumBuildingsAfterDate(LocalDate date) {
         List<ConstructionSite> buildingList = constructionSiteRepository.findAll();
-
         BigDecimal sum = BigDecimal.ZERO;
 
         if (buildingList.isEmpty()) return sum;
 
-        buildingList.stream()
+        List<ConstructionSite> filterBuilding = buildingList.stream()
                 .filter(current -> current.getStart().isAfter(date))
-                .collect(Collectors.toList());
+                .toList();
 
-        for (ConstructionSite building : buildingList) {
+        for (ConstructionSite building : filterBuilding) {
             BigDecimal result = sum.add(building.getAmount());
             sum = result;
         }
@@ -83,22 +80,20 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
         return sum;
     }
 
-    @SneakyThrows
     @Override
     public void selectedConstructor(ConstructionSite constructor, Offer selected) {
         Optional<Offer> offerOptional = Optional.ofNullable(offerRepository.findWithMembersByTitle(selected.getTitle()));
         Optional<ConstructionSite> constructionSiteOptional = Optional.ofNullable(constructionSiteRepository.findByTitle(constructor.getTitle()));
 
-        if (offerOptional.isPresent() && constructionSiteOptional.isPresent()) {
-            if (!constructor.getConstructor().getStatus().equals(MemberStatus.ACTIVE)) {
-                throw new IllegalArgumentException("Status of member must be active");
-            }
-            else constructor.getConstructor().getType().add(MemberType.CONSTRUCTOR);
+        if (offerOptional.isPresent() && constructionSiteOptional.isPresent()) throw new IllegalArgumentException("Status of member must be active");
 
-            constructor.setConstructor(selected.getAcceptor());
-            constructionSiteRepository.save(constructor);
+        if (!constructor.getConstructor().getStatus().equals(MemberStatus.ACTIVE)) {
+            throw new IllegalArgumentException("Status of member must be active");
         }
-        else throw new DataNotFoundException();
+        else constructor.getConstructor().getType().add(MemberType.CONSTRUCTOR);
+
+        constructor.setConstructor(selected.getAcceptor());
+        constructionSiteRepository.save(constructor);
     }
 
     @Override
@@ -115,6 +110,11 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
             engineering.setEngineering(offer.getAcceptor());
             constructionSiteRepository.save(engineering);
         }
+        else try {
+            throw new NoDataFoundException("This offer didn't find");
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
     @Override
@@ -130,6 +130,11 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
             projector.setProjector(offer.getAcceptor());
             constructionSiteRepository.save(projector);
+        }
+        else try {
+            throw new NoDataFoundException("This offer didn't find");
+        } catch (NoDataFoundException e) {
+            throw new RuntimeException("NoDataFoundException didn't work", e);
         }
     }
 }

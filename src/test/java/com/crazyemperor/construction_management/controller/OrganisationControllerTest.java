@@ -91,7 +91,7 @@ class OrganisationControllerTest extends com.crazyemperor.construction_managemen
         Organisation organisation = new Organisation();
         organisation.setDeleted(true);
 
-        ResponseEntity<Organisation> expected = new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Long> expected = new ResponseEntity<>(HttpStatus.OK);
 
 //        when
         ResponseEntity<Long> actual = organisationController.deleteByID(anyLong());

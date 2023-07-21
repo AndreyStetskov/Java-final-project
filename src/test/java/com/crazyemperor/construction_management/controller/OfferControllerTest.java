@@ -93,7 +93,7 @@ class OfferControllerTest extends com.crazyemperor.construction_management.Mock 
 //        given
         offer.setDeleted(true);
 
-        ResponseEntity<Offer> expected = new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Long> expected = new ResponseEntity<>(HttpStatus.OK);
 
 //        when
         ResponseEntity<Long> actual = offerController.deleteByID(anyLong());

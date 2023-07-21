@@ -1,7 +1,7 @@
 package com.crazyemperor.construction_management.service.invoice;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Invoice;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,14 +19,14 @@ public interface InvoiceService {
      * Retrieving all unpaid invoices
      * @param id - ID of members who finding unpaid invoices
      * @return List of existing unpaid invoices
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no unpaid invoices were found.
      */
     List<Invoice> getUnpaid(long id);
     /**
      * Select unpaid invoices for paid
      * @param id - ID of members who selecting found unpaid invoices
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no unpaid invoices were found.
      */
     List<Invoice> selectedForPay(long id);
@@ -34,7 +34,7 @@ public interface InvoiceService {
      * Calculation of a total amount invoices which must be paid
      * @param id - ID of members who gonna pay invoices
      * @return List of existing unpaid invoices
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no unpaid invoices were found.
      */
     BigDecimal paymentAmount(long id);

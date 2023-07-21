@@ -1,11 +1,10 @@
 package com.crazyemperor.construction_management.database.members.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.members.MembersDataBaseService;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.repository.MemberRepository;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,47 +23,60 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
 
     @Override
     @CacheEvict("members")
-    public Member addMember(Member constructionSite) {
-        return memberRepository.save(constructionSite);
+    public Member addMember(Member member) {
+        return memberRepository.save(member);
     }
 
-    @SneakyThrows
     @Override
     @Cacheable("members")
     public List<Member> getMembers() {
         Optional<List<Member>> members = Optional.of(memberRepository.findAll());
 
         return members
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one member found");
+                    return null;
+                });
     }
 
-    @SneakyThrows
+
     @Override
     @Cacheable("members")
     public Member getByID(long id) {
         return memberRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No member found for id %d", id));
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
     @CacheEvict("members")
-    public void deleteByOrganisation(long id) {
-        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByOrganisationId(id));
+    public void deleteByOrganisationName(String name) {
+        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByOrganisationName(name));
         if (memberOptional.isPresent()) {
             Member member = memberOptional.get();
             member.setDeleted(true);
             memberRepository.save(member);
         }
-        else throw new DataNotFoundException();
+        else try {
+            throw new NoDataFoundException(String.format("No member found for id %s", name));
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
-    @SneakyThrows
     @Override
     @CacheEvict("members")
     public void deleteByID(long id) {
         Member member = memberRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    try {
+                        throw new NoDataFoundException(String.format("No member found for oid %d", id));
+                    } catch (NoDataFoundException e) {
+                        throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+                    }
+                });
 
         member.setDeleted(true);
         memberRepository.save(member);

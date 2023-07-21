@@ -1,9 +1,9 @@
 package com.crazyemperor.construction_management.database.payment.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.payment.PaymentDataBaseService;
 import com.crazyemperor.construction_management.entity.Payment;
 import com.crazyemperor.construction_management.repository.PaymentRepository;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,7 +31,10 @@ public class PaymentDataBaseImpl implements PaymentDataBaseService{
     @Cacheable("payments")
     public Payment getByID(long id) {
         return paymentRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No payment found for id %d", id));
+                    return null;
+                });
     }
 
     @Override

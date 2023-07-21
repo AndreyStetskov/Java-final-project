@@ -25,6 +25,12 @@ class ReportControllerTest extends com.crazyemperor.construction_management.Mock
     private Pageable pageable;
 
 
+    ReportControllerTest(Page page, Pageable pageable) {
+        this.page = page;
+        this.pageable = pageable;
+    }
+
+
     @Test
     void countAllDepartment_ReturnReport_Success() {
 

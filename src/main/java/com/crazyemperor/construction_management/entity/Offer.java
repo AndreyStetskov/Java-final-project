@@ -22,7 +22,7 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of offer field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -61,7 +61,7 @@ public class Offer {
     @Column(name = "duration")
     private LocalDateTime duration;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Value("${entity.enum.offer.status-value}")
     @Column(name = "status", columnDefinition = "smallint")
     private OfferStatus status;

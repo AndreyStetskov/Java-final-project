@@ -51,4 +51,15 @@ public class PaymentController {
 
         return payment != null ? ResponseEntity.ok(payment) : ResponseEntity.noContent().build();
     }
+
+
+    @GetMapping(value = "/find/all/paid")
+    public ResponseEntity<List<Payment>> getPaid() {
+        List<Payment> allOrganisations = paymentService.geAllPaidOrganisations();
+
+        if (allOrganisations != null && !allOrganisations.isEmpty()) {
+            return ResponseEntity.ok(allOrganisations);
+        }
+        else return ResponseEntity.noContent().build();
+    }
 }

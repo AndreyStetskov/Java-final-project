@@ -1,7 +1,7 @@
 package com.crazyemperor.construction_management.database.offer;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Offer;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface OfferDataBaseService {
     /**
      * Retrieving all offers
      * @return List of existing offers
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no offers were found.
      */
     List<Offer> getOffers();
@@ -28,28 +28,28 @@ public interface OfferDataBaseService {
      * Retrieving an offer by ID
      * @param id - ID of an offer to be found
      * @return An offer by ID
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no offer was found.
      */
     Offer getByID(long id);
     /**
      * Retrieving an offer by ID
      * @return An offer by ID
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no offer was found.
      */
     Offer getByTitle(String name);
     /**
      * Deleting an offer by name
      * @param name - name of an offer to be deleted
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if There's no such offer name.
      */
     void deleteByName(String name);
     /**
      * Deleting an offer by name
      * @param id - ID of a offer to be deleted
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if There's no such offer ID.
      */
     void deleteByID(long id);

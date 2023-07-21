@@ -1,7 +1,7 @@
 package com.crazyemperor.construction_management.database.members;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Member;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface MembersDataBaseService {
     /**
      * Retrieving all members
      * @return List of existing members
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no members were found.
      */
     List<Member> getMembers();
@@ -28,21 +28,21 @@ public interface MembersDataBaseService {
      * Retrieving a member by ID
      * @param id - ID of a member to be found
      * @return A member by ID
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if no member was found.
      */
     Member getByID(long id);
     /**
      * Deleting a member by name
-     * @param id - ID of a member to be deleted
-     * @throws DataNotFoundException
+     * @param name - Name of a member to be deleted
+     * @throws NoDataFoundException
      *          thrown if There's no such member ID.
      */
-    void deleteByOrganisation(long id);
+    void deleteByOrganisationName(String name);
     /**
      * Deleting a member by name
      * @param id - organisation ID of a member to be deleted
-     * @throws DataNotFoundException
+     * @throws NoDataFoundException
      *          thrown if There's no such member name.
      */
     void deleteByID(long id);
