@@ -1,9 +1,9 @@
 package com.crazyemperor.construction_management.service.offer.implement;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.offer.OfferService;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class OfferServiceImpl implements OfferService {
     public Offer getCheapest(long id) {
 
         List<Offer> offerList = offerRepository.findAllActiveOffer(id);
-        if (offerList.isEmpty()) throw new DataNotFoundException();
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
         Offer cheapestProposal = new Offer();
         BigDecimal minPrice = new BigDecimal(String.valueOf(offerList.get(0).getAmount()));
@@ -35,9 +35,9 @@ public class OfferServiceImpl implements OfferService {
         for (Offer offer : offerList) {
             if (minPrice.compareTo(offer.getAmount()) > 0) {
                 String value = String.valueOf(offer.getAmount());
-                minPrice= new BigDecimal(value);
+                minPrice = new BigDecimal(value);
 
-                cheapestProposal= offer;
+                cheapestProposal = offer;
             }
         }
 
@@ -50,7 +50,7 @@ public class OfferServiceImpl implements OfferService {
     public Offer getFastest(long id) {
 
         List<Offer> offerList = offerRepository.findAllActiveOffer(id);
-        if (offerList.isEmpty()) throw new DataNotFoundException();
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
         Offer fastestProposal = new Offer();
         int minDays = Integer.MAX_VALUE;
@@ -76,12 +76,12 @@ public class OfferServiceImpl implements OfferService {
     public List<Offer> getCheaperThan(long id, BigDecimal amount) {
 
         List<Offer> offerList = offerRepository.findAllActiveOffer(id);
-        if (offerList.isEmpty()) throw new DataNotFoundException();
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
         List<Offer> newList = new ArrayList<>();
 
         for (Offer offer : offerList) {
-            if (offer.getAmount().compareTo(amount) <= 0) {
+            if (offer.getAmount().compareTo(amount) >= 0) {
                 newList.add(offer);
             }
         }
@@ -94,7 +94,7 @@ public class OfferServiceImpl implements OfferService {
     public List<Offer> getFasterThen(long id, int deadline) {
 
         List<Offer> offerList = offerRepository.findAllActiveOffer(id);
-        if (offerList.isEmpty()) throw new DataNotFoundException();
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
         List<Offer> newList = new ArrayList<>();
 

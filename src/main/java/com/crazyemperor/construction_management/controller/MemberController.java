@@ -19,14 +19,14 @@ public class MemberController {
     private final MemberService memberService;
 
 
-    @PostMapping(value = "/create_new_member")
-    public ResponseEntity<Member> createInvoice(@RequestBody Member member) {
+    @PostMapping(value = "/create-new-member")
+    public ResponseEntity<Member> createMember(@RequestBody Member member) {
         memberCRUDService.add(member);
         return ResponseEntity.status(HttpStatus.CREATED).body(member);
     }
 
     @GetMapping(value = "/find/all")
-    public ResponseEntity<List<Member>> allInvoices() {
+    public ResponseEntity<List<Member>> allMembers() {
         List<Member> members = memberCRUDService.getAllMembers();
 
         if (members != null && !members.isEmpty()) {
@@ -36,42 +36,32 @@ public class MemberController {
     }
 
     @GetMapping(value = "/find/{id}")
-    public ResponseEntity<Member> getMemberById(@PathVariable int id) {
+    public ResponseEntity<Member> getMemberById(@PathVariable long id) {
         Member member = memberCRUDService.getMemberByID(id);
 
         return member != null ? ResponseEntity.ok(member) : ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Long> deleteByID(@PathVariable int id) {
+    public ResponseEntity<Long> deleteByID(@PathVariable long id) {
         memberCRUDService.deleteMemberByID(id);
 
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/delete/{organisation_id}")
-    public ResponseEntity<Long> deleteByOrganisation(@PathVariable long organisation_id) {
-        memberCRUDService.deleteMemberByOrganisation(organisation_id);
+    @PutMapping(value = "/delete/{organisationName}")
+    public ResponseEntity<Long> deleteByOrganisationName(@PathVariable String organisationName) {
+        memberCRUDService.deleteMemberByOrganisationName(organisationName);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/find/with_gmail")
+    @GetMapping(value = "/find/with-gmail")
     public ResponseEntity<List<Member>> getWithGmail() {
         List<Member> memberWithGmail = memberService.getMembersWithGmail();
 
         if (memberWithGmail != null && !memberWithGmail.isEmpty()) {
             return ResponseEntity.ok(memberWithGmail);
-        }
-        else return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/find/all/paid")
-    public ResponseEntity<List<Member>> getPaid() {
-        List<Member> allOrganisations = memberService.geAllPaidOrganisations();
-
-        if (allOrganisations != null && !allOrganisations.isEmpty()) {
-            return ResponseEntity.ok(allOrganisations);
         }
         else return ResponseEntity.noContent().build();
     }

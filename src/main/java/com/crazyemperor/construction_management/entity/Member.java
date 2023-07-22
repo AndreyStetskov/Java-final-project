@@ -4,10 +4,10 @@ import com.crazyemperor.construction_management.entity.auxillirary.MemberStatus;
 import com.crazyemperor.construction_management.entity.auxillirary.MemberType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertFalse;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "Members", schema = "public")
+@Table(name = "members", schema = "public")
 public class Member {
 
     @Id
@@ -31,16 +31,17 @@ public class Member {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "type", columnDefinition = "smallint")
     private Set<MemberType> type;
 
     @PositiveOrZero
     @Column(name = "budget", precision = 10)
     private BigDecimal budget;
 
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
+    @Value("${entity.enum.member.status-value}")
+    @Column(name = "status", columnDefinition = "smallint")
     private MemberStatus status;
 
     @AssertFalse

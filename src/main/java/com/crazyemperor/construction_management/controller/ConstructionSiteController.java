@@ -22,7 +22,7 @@ public class ConstructionSiteController {
     private final ConstructionSiteService constructionSiteService;
 
 
-    @PostMapping(value = "/create_new_object")
+    @PostMapping(value = "/create-new-object")
     public ResponseEntity<ConstructionSite> createObject(@RequestBody ConstructionSite constructionSite) {
         constructionSiteCRUDService.add(constructionSite);
         return ResponseEntity.status(HttpStatus.CREATED).body(constructionSite);
@@ -80,24 +80,24 @@ public class ConstructionSiteController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/add_constructor")
+    @PutMapping(value = "/add-constructor")
     public ResponseEntity<ConstructionSite> addConstructor(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
-        ConstructionSite constructor = constructionSiteService.selectedConstructor(constructionSite, offer);
+        constructionSiteService.selectedConstructor(constructionSite, offer);
 
-        return constructionSite != null ? ResponseEntity.ok(constructor) : ResponseEntity.noContent().build();
+        return constructionSite != null ? ResponseEntity.ok(constructionSite) : ResponseEntity.badRequest().build();
     }
 
-    @PutMapping(value = "/add_engineering")
+    @PutMapping(value = "/add-engineering")
     public ResponseEntity<ConstructionSite> addEngineering(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
-        ConstructionSite engineering = constructionSiteService.selectedEngineering(constructionSite, offer);
+        constructionSiteService.selectedEngineering(constructionSite, offer);
 
-        return constructionSite != null ? ResponseEntity.ok(engineering) : ResponseEntity.noContent().build();
+        return constructionSite != null ? ResponseEntity.ok(constructionSite) : ResponseEntity.badRequest().build();
     }
 
-    @PutMapping(value = "/add_protector")
-    public ResponseEntity<ConstructionSite> addProtector(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
-        ConstructionSite protector = constructionSiteService.selectedProtector(constructionSite, offer);
+    @PutMapping(value = "/add-protector")
+    public ResponseEntity<ConstructionSite> addProjector(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        constructionSiteService.selectedProjector(constructionSite, offer);
 
-        return constructionSite != null ? ResponseEntity.ok(protector) : ResponseEntity.noContent().build();
+        return constructionSite != null ? ResponseEntity.ok(constructionSite) : ResponseEntity.badRequest().build();
     }
 }

@@ -1,11 +1,10 @@
 package com.crazyemperor.construction_management.database.invoice.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.invoice.InvoiceDataBaseService;
 import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.repository.InvoiceRepository;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -23,32 +22,35 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
 
 
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public Invoice addInvoice(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
 
-    @SneakyThrows
     @Override
-    @Cacheable("Invoices")
+    @Cacheable("invoices")
     public List<Invoice> getInvoices() {
         Optional<List<Invoice>> invoices = Optional.of(invoiceRepository.findAll());
 
         return invoices
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one invoice found");
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
-    @Cacheable("Invoices")
+    @Cacheable("invoices")
     public Invoice getByID(long id) {
         return invoiceRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No invoice found for id %d", id));
+                    return null;
+                });
     }
 
-    @SneakyThrows
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public void deleteByName(String name) {
         Optional<Invoice> invoiceOptional = Optional.ofNullable(invoiceRepository.findByTitle(name));
         if (invoiceOptional.isPresent()) {
@@ -56,15 +58,25 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
             invoice.setDeleted(true);
             invoiceRepository.save(invoice);
         }
-        else throw new DataNotFoundException();
+        else try {
+            throw new NoDataFoundException("This invoice didn't find");
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
-    @SneakyThrows
+
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public void deleteByID(long id) {
         Invoice invoice = invoiceRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    try {
+                        throw new NoDataFoundException(String.format("No invoice found for oid %d", id));
+                    } catch (NoDataFoundException e) {
+                        throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+                    }
+                });
             invoice.setDeleted(true);
             invoiceRepository.save(invoice);
     }

@@ -20,7 +20,7 @@ public class OfferController {
     private final OfferService offerService;
 
 
-    @PostMapping(value = "/create_new_offer")
+    @PostMapping(value = "/create-new-offer")
     public ResponseEntity<Offer> createOffer(@RequestBody Offer offer) {
         offerCRUDService.add(offer);
         return ResponseEntity.status(HttpStatus.CREATED).body(offer);
@@ -63,36 +63,31 @@ public class OfferController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/{member_id}/cheapest")
-    public ResponseEntity<Offer> getTheBestOfferByAmount(@PathVariable long member_id) {
-        Offer cheapestOffers = offerService.getCheapest(member_id);
+    @GetMapping(value = "/{memberId}/cheapest")
+    public ResponseEntity<Offer> getTheBestOfferByAmount(@PathVariable long memberId) {
+        Offer cheapestOffers = offerService.getCheapest(memberId);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/{member_id}/cheapest/{amount}")
-    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable long member_id, @PathVariable BigDecimal amount) {
-        List<Offer> cheapestOffers = offerService.getCheaperThan(member_id, amount);
+    @GetMapping(value = "/{memberId}/cheapest/{amount}")
+    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable long memberId, @RequestBody BigDecimal amount) {
+        List<Offer> cheapestOffers = offerService.getCheaperThan(memberId, amount);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/{member_id}/fastest")
-    public ResponseEntity<Offer> getTheBestOfferByDay(@PathVariable long member_id) {
-        Offer fastestOffers = offerService.getFastest(member_id);
+    @GetMapping(value = "/{memberId}/fastest")
+    public ResponseEntity<Offer> getTheBestOfferByDay(@PathVariable long memberId) {
+        Offer fastestOffers = offerService.getFastest(memberId);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/fastest/{member_id}/{days}")
-    public ResponseEntity<List<Offer>> getOffersByDay(@PathVariable long member_id, @PathVariable int days) {
-        List<Offer> fastestOffers = offerService.getFasterThen(member_id, days);
+    @GetMapping(value = "/fastest/{memberId}/{days}")
+    public ResponseEntity<List<Offer>> getOffersByDay(@PathVariable long memberId, @PathVariable int days) {
+        List<Offer> fastestOffers = offerService.getFasterThen(memberId, days);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
-    }
-
-    @PutMapping(value = "/deactivate")
-    public void deactivate() {
-        offerService.irrelevant();
     }
 }

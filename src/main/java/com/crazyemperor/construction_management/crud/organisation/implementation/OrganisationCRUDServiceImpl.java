@@ -28,7 +28,7 @@ public class OrganisationCRUDServiceImpl implements OrganisationCRUDService {
     }
 
     @Override
-    public Organisation getByOrganisationID(long id) {
+    public Organisation getOrganisationByID(long id) {
         return organisationDB.getByID(id);
     }
 

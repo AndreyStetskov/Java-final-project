@@ -4,6 +4,5 @@ public enum MemberStatus {
 
     ACTIVE,
     REACTIVE,
-    SUSPENDED,
-
+    SUSPENDED
 }

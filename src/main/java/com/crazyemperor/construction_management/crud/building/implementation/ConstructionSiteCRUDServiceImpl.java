@@ -16,8 +16,8 @@ public class ConstructionSiteCRUDServiceImpl implements ConstructionSiteCRUDServ
 
 
     @Override
-    public ConstructionSite add(ConstructionSite constructionSite) {
-        return constructionSiteDB.addConstructionSite(constructionSite);
+    public void add(ConstructionSite constructionSite) {
+        constructionSiteDB.addConstructionSite(constructionSite);
     }
 
     @Override

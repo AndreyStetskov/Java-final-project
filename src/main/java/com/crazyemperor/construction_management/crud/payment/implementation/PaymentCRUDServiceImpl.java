@@ -16,11 +16,6 @@ public class PaymentCRUDServiceImpl implements PaymentCRUDService {
 
 
     @Override
-    public Payment add(Payment offer) {
-        return paymentDBService.addPayment(offer);
-    }
-
-    @Override
     public List<Payment> getAllPayments() {
         return paymentDBService.getPayments();
     }

@@ -19,7 +19,7 @@ public class ReportController {
     private final ReportService reportService;
 
 
-    @GetMapping(value = "/member/all_departments/count")
+    @GetMapping(value = "/member/all-departments/count")
     public ResponseEntity<Page<Member>> countAllDepartment(@RequestBody Pageable pageable) {
         Page<Member> count = reportService.getAllDepartmentsInBuildings(pageable);
 

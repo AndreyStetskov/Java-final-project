@@ -11,12 +11,23 @@ import java.util.List;
 public interface OfferRepository extends JpaRepository<Offer, Long> {
 
     Offer findByTitle(final String name);
+    @Query("SELECT offer " +
+            "FROM Offer offer " +
+            "LEFT JOIN Member member ON offer.id = member.id " +
+            "WHERE offer.title = :name")
+    Offer findWithMembersByTitle(final String name);
 
     @Query("SELECT offer " +
             "FROM Offer offer " +
             "LEFT JOIN Member member ON offer.id = member.id " +
             "WHERE offer.isDeleted = false AND offer.status = 0 AND offer.offerer = :memberId")
     List<Offer> findAllActiveOffer(long memberId);
+
+    @Query("SELECT offer " +
+            "FROM Offer offer " +
+            "RIGHT JOIN ConstructionSite building ON offer.id = building.id " +
+            "WHERE building.finish < LOCALTIME()")
+    List<Offer> findWithOfferAndMembers();
 
     @Modifying
     @Query("UPDATE Offer offer " +

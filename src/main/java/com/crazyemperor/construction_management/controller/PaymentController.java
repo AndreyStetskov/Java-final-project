@@ -1,33 +1,41 @@
 package com.crazyemperor.construction_management.controller;
 
+import com.crazyemperor.construction_management.bank.model.BankResponse;
 import com.crazyemperor.construction_management.crud.payment.PaymentCRUDService;
 import com.crazyemperor.construction_management.entity.Payment;
+import com.crazyemperor.construction_management.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/payment")
+@RequestMapping(value = "/payment", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class PaymentController {
 
     private final PaymentCRUDService paymentCRUDService;
+    private final PaymentService paymentService;
 
 
-    @PostMapping(value = "/create_new_payment")
-    public ResponseEntity<Payment> createOffer(@RequestBody Payment payment) {
-        paymentCRUDService.add(payment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(payment);
+    @PostMapping(value = "/create-new-payment")
+    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment, @RequestBody BankResponse response) {
+        paymentService.addPayment(payment, response);
+
+        return response.success() ? ResponseEntity.status(HttpStatus.CREATED).body(payment) : ResponseEntity.badRequest().build();
     }
 
     @GetMapping(value = "/find/all")
     public ResponseEntity<List<Payment>> allPayments() {
         List<Payment> payments = paymentCRUDService.getAllPayments();
 
-        return payments != null ? ResponseEntity.ok(payments) : ResponseEntity.noContent().build();
+        if (payments != null && !payments.isEmpty()) {
+            return ResponseEntity.ok(payments);
+        }
+        else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
@@ -42,5 +50,16 @@ public class PaymentController {
         Payment payment = paymentCRUDService.getPaymentByName(name);
 
         return payment != null ? ResponseEntity.ok(payment) : ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping(value = "/find/all/paid")
+    public ResponseEntity<List<Payment>> getPaid() {
+        List<Payment> allOrganisations = paymentService.geAllPaidOrganisations();
+
+        if (allOrganisations != null && !allOrganisations.isEmpty()) {
+            return ResponseEntity.ok(allOrganisations);
+        }
+        else return ResponseEntity.noContent().build();
     }
 }

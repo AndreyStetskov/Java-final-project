@@ -1,11 +1,10 @@
 package com.crazyemperor.construction_management.service.invoice.implement;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.repository.InvoiceRepository;
 import com.crazyemperor.construction_management.service.invoice.InvoiceService;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +19,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
 
 
-    @SneakyThrows
     @Override
     @Transactional
     public List<Invoice> getUnpaid(long id) {
         Optional<List<Invoice>> invoices = Optional.ofNullable(invoiceRepository.findAllUnpaid(id));
 
         return invoices
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one unpaid invoice found");
+                    return null;
+                });
     }
 
     @Override

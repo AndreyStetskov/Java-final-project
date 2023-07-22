@@ -4,7 +4,6 @@ import com.crazyemperor.construction_management.crud.invoice.InvoiceCRUDService;
 import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.service.invoice.InvoiceService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
 
-    @PostMapping(value = "/create_new_invoice")
+    @PostMapping(value = "/create-new-invoice")
     public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
         invoiceCRUDService.add(invoice);
         return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
@@ -33,7 +32,8 @@ public class InvoiceController {
 
         if (invoices != null && !invoices.isEmpty()) {
             return ResponseEntity.ok(invoices);
-        } else return ResponseEntity.noContent().build();
+        }
+        else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
@@ -51,37 +51,37 @@ public class InvoiceController {
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<Long> deleteByName(@PathVariable String name) {
+    public ResponseEntity<String> deleteByName(@PathVariable String name) {
         invoiceCRUDService.deleteInvoiceByName(name);
 
         return ResponseEntity.ok().build();
     }
 
-    @SneakyThrows
     @GetMapping(value = "/{memberId}/unpaid")
     public ResponseEntity<List<Invoice>> getUnpaidInvoices(@PathVariable Long memberId) {
         List<Invoice> unpaid = invoiceService.getUnpaid(memberId);
 
         if (unpaid != null && !unpaid.isEmpty()) {
             return ResponseEntity.ok(unpaid);
-        } else return ResponseEntity.noContent().build();
+        }
+        else return ResponseEntity.noContent().build();
 
     }
 
-    @SneakyThrows
-    @PutMapping(value = "/{memberId}/unpaid/select")
+    @PutMapping(value = "/{memberId}/unpaid/for-paid")
     public ResponseEntity<List<Invoice>> selected(@PathVariable Long memberId) {
         List<Invoice> selected = invoiceService.selectedForPay(memberId);
 
         if (selected != null && !selected.isEmpty()) {
             return ResponseEntity.ok(selected);
-        } else return ResponseEntity.noContent().build();
+        }
+        else return ResponseEntity.noContent().build();
     }
 
-    @SneakyThrows
     @GetMapping(value = "/{memberId}/unpaid/sum")
-    public BigDecimal getSum(@PathVariable Long memberId) {
-        return invoiceService.paymentAmount(memberId);
-    }
+    public ResponseEntity<BigDecimal> getSum(@PathVariable Long memberId) {
+        invoiceService.paymentAmount(memberId);
 
+        return ResponseEntity.ok().build();
+    }
 }

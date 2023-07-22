@@ -9,15 +9,15 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "Payments", schema = "public")
+@Table(name = "payments", schema = "public")
 public class Payment {
 
     @Id
-    @Column(name = "payment_ID")
+    @Column(name = "payment_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of payment mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -25,19 +25,10 @@ public class Payment {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @Basic(optional = false)
-    @Column(name = "invoice_id")
-    private Long invoiceId;
+    @ManyToOne
+    @JoinColumn(name = "paid_invoice_id", referencedColumnName = "invoice_id")
+    private Invoice paid;
 
-    @Basic(optional = false)
-    @Column(name = "acceptor_id")
-    private Long acceptorId;
-
-    @Basic(optional = false)
-    @Column(name = "offerer_id")
-    private Long offererId;
-
-    @Basic(optional = false)
     @Column(name = "description")
     private String description;
 }

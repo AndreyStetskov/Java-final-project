@@ -1,9 +1,10 @@
 package com.crazyemperor.construction_management.service.member.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.repository.MemberRepository;
+import com.crazyemperor.construction_management.repository.PaymentRepository;
 import com.crazyemperor.construction_management.service.member.MemberService;
-import com.ho1ho.springboot.framework.core.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -26,16 +27,9 @@ public class MemberServiceImpl implements MemberService {
         Optional<List<Member>> members = Optional.ofNullable(memberRepository.findMembersWithGmailAddress());
 
         return members
-                .orElseThrow(DataNotFoundException::new);
-    }
-
-    @SneakyThrows
-    @Override
-    @Transactional
-    public List<Member> geAllPaidOrganisations() {
-        Optional<List<Member>> members = Optional.ofNullable(memberRepository.findAllPaidMembers());
-
-        return members
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one member with gmail found");
+                    return null;
+                });
     }
 }
