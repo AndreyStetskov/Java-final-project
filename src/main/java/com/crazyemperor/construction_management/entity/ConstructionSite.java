@@ -4,8 +4,11 @@ import com.crazyemperor.construction_management.entity.auxillirary.ConstructionS
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -13,16 +16,18 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "ConstructionSites", schema = "public")
+@Table(name = "construction_sites", schema = "public")
 public class ConstructionSite {
 
     @Id
     @Column(name = "construction_site_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of construction sites mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -46,7 +51,7 @@ public class ConstructionSite {
     @JoinColumn(name = "engineering_id", referencedColumnName = "member_id")
     private Member engineering;
 
-    @NotNull(message = "this field mustn't be null")
+    @NotNull(message = "amount mustn't be null")
     @PositiveOrZero
     @Column(name = "amount", precision = 10)
     private BigDecimal amount;
@@ -59,8 +64,9 @@ public class ConstructionSite {
     @FutureOrPresent
     private LocalDate finish;
 
-    @NotNull(message = "this field mustn't be null")
-    @Column(name = "construction_site_status")
+    @Enumerated(EnumType.ORDINAL)
+    @Value("${entity.enum.building.status-value}")
+    @Column(name = "construction_site_status", columnDefinition = "smallint")
     private ConstructionSiteStatus status;
 
     @AssertFalse

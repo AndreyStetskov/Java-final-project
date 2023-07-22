@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "Offers", schema = "public")
+@Table(name = "offers", schema = "public")
 public class Offer {
 
     @Id
@@ -21,7 +22,7 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "this string field mustn't be the empty string (i.e. it must have at least one character)")
+    @NotBlank(message = "title of offer field mustn't be the empty string (i.e. it must have at least one character)")
     @Column(name = "title")
     private String title;
 
@@ -60,7 +61,9 @@ public class Offer {
     @Column(name = "duration")
     private LocalDateTime duration;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
+    @Value("${entity.enum.offer.status-value}")
+    @Column(name = "status", columnDefinition = "smallint")
     private OfferStatus status;
 
     @AssertFalse

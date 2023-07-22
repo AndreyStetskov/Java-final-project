@@ -1,5 +1,6 @@
 package com.crazyemperor.construction_management.database.invoice.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.invoice.InvoiceDataBaseService;
 import com.crazyemperor.construction_management.entity.Invoice;
 import com.crazyemperor.construction_management.repository.InvoiceRepository;
@@ -21,44 +22,62 @@ public class InvoiceDataBaseImpl implements InvoiceDataBaseService {
 
 
     @Override
-    @CacheEvict("Invoices")
+    @CacheEvict("invoices")
     public Invoice addInvoice(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
 
     @Override
-    @Cacheable("Invoices")
+    @Cacheable("invoices")
     public List<Invoice> getInvoices() {
-        return invoiceRepository.findAll();
+        Optional<List<Invoice>> invoices = Optional.of(invoiceRepository.findAll());
+
+        return invoices
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one invoice found");
+                    return null;
+                });
     }
 
     @Override
-    @Cacheable("Invoices")
+    @Cacheable("invoices")
     public Invoice getByID(long id) {
-        return invoiceRepository.findById(id);
+        return invoiceRepository.findById(id)
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No invoice found for id %d", id));
+                    return null;
+                });
     }
 
     @Override
-    @CacheEvict("Invoices")
-    public Invoice deleteByName(String name, Invoice delete) {
+    @CacheEvict("invoices")
+    public void deleteByName(String name) {
         Optional<Invoice> invoiceOptional = Optional.ofNullable(invoiceRepository.findByTitle(name));
         if (invoiceOptional.isPresent()) {
             Invoice invoice = invoiceOptional.get();
             invoice.setDeleted(true);
             invoiceRepository.save(invoice);
         }
-        return invoiceOptional.orElse(null);
+        else try {
+            throw new NoDataFoundException("This invoice didn't find");
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
+
     @Override
-    @CacheEvict("Invoices")
-    public Invoice deleteByID(long id, Invoice delete) {
-        Optional<Invoice> invoiceOptional = Optional.ofNullable(invoiceRepository.findById(id));
-        if (invoiceOptional.isPresent()) {
-            Invoice invoice = invoiceOptional.get();
+    @CacheEvict("invoices")
+    public void deleteByID(long id) {
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> {
+                    try {
+                        throw new NoDataFoundException(String.format("No invoice found for oid %d", id));
+                    } catch (NoDataFoundException e) {
+                        throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+                    }
+                });
             invoice.setDeleted(true);
             invoiceRepository.save(invoice);
-        }
-        return invoiceOptional.orElse(null);
     }
 }

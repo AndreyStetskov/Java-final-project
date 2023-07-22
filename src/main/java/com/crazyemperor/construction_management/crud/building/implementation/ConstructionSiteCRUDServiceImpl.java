@@ -16,8 +16,8 @@ public class ConstructionSiteCRUDServiceImpl implements ConstructionSiteCRUDServ
 
 
     @Override
-    public ConstructionSite add(ConstructionSite constructionSite) {
-        return constructionSiteDB.addConstructionSite(constructionSite);
+    public void add(ConstructionSite constructionSite) {
+        constructionSiteDB.addConstructionSite(constructionSite);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ConstructionSiteCRUDServiceImpl implements ConstructionSiteCRUDServ
     }
 
     @Override
-    public ConstructionSite deleteConstructionSiteByName(String name, ConstructionSite delete) {
-       return constructionSiteDB.deleteByName(name, delete);
+    public void deleteConstructionSiteByName(String name) {
+       constructionSiteDB.deleteByName(name);
     }
 
     @Override
-    public ConstructionSite deleteConstructionSiteByID(long id, ConstructionSite delete) {
-       return constructionSiteDB.deleteByID(id, delete);
+    public void deleteConstructionSiteByID(long id) {
+       constructionSiteDB.deleteByID(id);
     }
 }

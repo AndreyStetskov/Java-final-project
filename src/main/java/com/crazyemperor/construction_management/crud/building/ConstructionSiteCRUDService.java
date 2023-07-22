@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface ConstructionSiteCRUDService {
 
-    ConstructionSite add(ConstructionSite constructionSite);
+    void add(ConstructionSite constructionSite);
     List<ConstructionSite> getAllConstructionSites();
     ConstructionSite getConstructionSiteByID(long id);
-    ConstructionSite deleteConstructionSiteByName(String name, ConstructionSite update);
-    ConstructionSite deleteConstructionSiteByID(long id, ConstructionSite update);
+    void deleteConstructionSiteByName(String name);
+    void deleteConstructionSiteByID(long id);
 
 }

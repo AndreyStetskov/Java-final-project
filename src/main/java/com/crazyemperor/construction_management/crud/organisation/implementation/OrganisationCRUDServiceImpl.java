@@ -28,17 +28,17 @@ public class OrganisationCRUDServiceImpl implements OrganisationCRUDService {
     }
 
     @Override
-    public Organisation getByOrganisationID(long id) {
+    public Organisation getOrganisationByID(long id) {
         return organisationDB.getByID(id);
     }
 
     @Override
-    public Organisation deleteOrganisationByName(String name, Organisation organisation) {
-        return organisationDB.deleteByName(name, organisation);
+    public void deleteOrganisationByName(String name) {
+        organisationDB.deleteByName(name);
     }
 
     @Override
-    public Organisation deleteOrganisationByID(long id, Organisation organisation) {
-        return organisationDB.deleteByID(id, organisation);
+    public void deleteOrganisationByID(long id) {
+        organisationDB.deleteByID(id);
     }
 }

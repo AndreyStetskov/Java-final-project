@@ -1,5 +1,6 @@
 package com.crazyemperor.construction_management.database.members.implementation;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.database.members.MembersDataBaseService;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.repository.MemberRepository;
@@ -21,44 +22,63 @@ public class MemberDataBaseImpl implements MembersDataBaseService {
 
 
     @Override
-    @CacheEvict("Members")
-    public Member addMember(Member constructionSite) {
-        return memberRepository.save(constructionSite);
+    @CacheEvict("members")
+    public Member addMember(Member member) {
+        return memberRepository.save(member);
     }
 
     @Override
-    @Cacheable("Members")
+    @Cacheable("members")
     public List<Member> getMembers() {
-        return memberRepository.findAll();
+        Optional<List<Member>> members = Optional.of(memberRepository.findAll());
+
+        return members
+                .orElseThrow(() -> {
+                    new NoDataFoundException("No one member found");
+                    return null;
+                });
     }
 
+
     @Override
-    @Cacheable("Members")
+    @Cacheable("members")
     public Member getByID(long id) {
-        return memberRepository.findById(id);
+        return memberRepository.findById(id)
+                .orElseThrow(() -> {
+                    new NoDataFoundException(String.format("No member found for id %d", id));
+                    return null;
+                });
     }
 
     @Override
-    @CacheEvict("Members")
-    public Member deleteByOrganisation(long id, Member update) {
-        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByOrganisationId(id));
+    @CacheEvict("members")
+    public void deleteByOrganisationName(String name) {
+        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByOrganisationName(name));
         if (memberOptional.isPresent()) {
             Member member = memberOptional.get();
             member.setDeleted(true);
             memberRepository.save(member);
         }
-        return memberOptional.orElse(null);
+        else try {
+            throw new NoDataFoundException(String.format("No member found for id %s", name));
+        } catch (NoDataFoundException e) {
+            throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+        }
     }
 
     @Override
-    @CacheEvict("Members")
-    public Member deleteByID(long id, Member update) {
-        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findById(id));
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            member.setDeleted(true);
-            memberRepository.save(member);
-        }
-        return memberOptional.orElse(null);
+    @CacheEvict("members")
+    public void deleteByID(long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> {
+                    try {
+                        throw new NoDataFoundException(String.format("No member found for oid %d", id));
+                    } catch (NoDataFoundException e) {
+                        throw new IllegalArgumentException("NoDataFoundException didn't work", e);
+                    }
+                });
+
+        member.setDeleted(true);
+        memberRepository.save(member);
     }
 }

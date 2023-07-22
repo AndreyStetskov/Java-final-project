@@ -8,7 +8,7 @@ public interface MemberCRUDService {
 
     Member add(Member member);
     List<Member> getAllMembers();
-    Member getMemberByID(int id);
-    Member deleteMemberByOrganisation(Long id, Member delete);
-    Member deleteMemberByID(int id, Member delete);
+    Member getMemberByID(long id);
+    void deleteMemberByOrganisationName(String name);
+    void deleteMemberByID(long id);
 }

@@ -2,6 +2,7 @@ package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.crud.building.ConstructionSiteCRUDService;
 import com.crazyemperor.construction_management.entity.ConstructionSite;
+import com.crazyemperor.construction_management.entity.Offer;
 import com.crazyemperor.construction_management.service.building.ConstructionSiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class ConstructionSiteController {
     private final ConstructionSiteService constructionSiteService;
 
 
-    @PostMapping(value = "/create_new_object")
+    @PostMapping(value = "/create-new-object")
     public ResponseEntity<ConstructionSite> createObject(@RequestBody ConstructionSite constructionSite) {
         constructionSiteCRUDService.add(constructionSite);
         return ResponseEntity.status(HttpStatus.CREATED).body(constructionSite);
@@ -31,7 +32,10 @@ public class ConstructionSiteController {
     public ResponseEntity<List<ConstructionSite>> allConstructionSites() {
         List<ConstructionSite> constructionSites = constructionSiteCRUDService.getAllConstructionSites();
 
-        return constructionSites != null ? ResponseEntity.ok(constructionSites) : ResponseEntity.noContent().build();
+        if (constructionSites != null && !constructionSites.isEmpty()) {
+            return ResponseEntity.ok(constructionSites);
+        } else return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping(value = "/find/{id}")
@@ -42,31 +46,58 @@ public class ConstructionSiteController {
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<ConstructionSite> deleteByID(@PathVariable Long id, @RequestBody ConstructionSite constructionSite) {
-        ConstructionSite closeConstructionSite = constructionSiteCRUDService.deleteConstructionSiteByID(id, constructionSite);
+    public ResponseEntity<Long> deleteByID(@PathVariable Long id) {
+       constructionSiteCRUDService.deleteConstructionSiteByID(id);
 
-        return constructionSite != null ? ResponseEntity.ok(closeConstructionSite) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<ConstructionSite> deleteByName(@PathVariable String name, @RequestBody ConstructionSite constructionSite) {
-        ConstructionSite closeConstructionSite = constructionSiteCRUDService.deleteConstructionSiteByName(name, constructionSite);
+    public ResponseEntity<String> deleteByName(@PathVariable String name) {
+        constructionSiteCRUDService.deleteConstructionSiteByName(name);
 
-        return constructionSite != null ? ResponseEntity.ok(closeConstructionSite) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/sum/all")
-    public BigDecimal getAllSum() {
-        return constructionSiteService.getSumAllBuildings();
+    public ResponseEntity<BigDecimal> getAllSum() {
+        constructionSiteService.getSumAllBuildings();
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "sum/current")
-    public BigDecimal getCurrentSum() {
-        return constructionSiteService.getSumCurrentBuildings();
+    public ResponseEntity<BigDecimal> getCurrentSum() {
+        constructionSiteService.getSumCurrentBuildings();
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "sum/{date}")
-    public BigDecimal getSumAfter(@RequestBody LocalDate date) {
-        return constructionSiteService.getSumBuildingsAfterDate(date);
+    public ResponseEntity<BigDecimal> getSumAfter(@RequestBody LocalDate date) {
+        constructionSiteService.getSumBuildingsAfterDate(date);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/add-constructor")
+    public ResponseEntity<ConstructionSite> addConstructor(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        constructionSiteService.selectedConstructor(constructionSite, offer);
+
+        return constructionSite != null ? ResponseEntity.ok(constructionSite) : ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping(value = "/add-engineering")
+    public ResponseEntity<ConstructionSite> addEngineering(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        constructionSiteService.selectedEngineering(constructionSite, offer);
+
+        return constructionSite != null ? ResponseEntity.ok(constructionSite) : ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping(value = "/add-protector")
+    public ResponseEntity<ConstructionSite> addProjector(@RequestBody ConstructionSite constructionSite, @RequestBody Offer offer) {
+        constructionSiteService.selectedProjector(constructionSite, offer);
+
+        return constructionSite != null ? ResponseEntity.ok(constructionSite) : ResponseEntity.badRequest().build();
     }
 }

@@ -33,14 +33,17 @@ public class OfferCRUDServiceImpl implements OfferCRUDService {
     }
 
     @Override
-    public Offer deleteOfferByName(String name, Offer delete) {
-        offerDBService.deleteByName(name, delete);
-        return delete;
+    public Offer getOfferByTitle(String name) {
+        return offerDBService.getByTitle(name);
     }
 
     @Override
-    public Offer deleteOfferByID(long id, Offer delete) {
-        offerDBService.deleteByID(id, delete);
-        return delete;
+    public void deleteOfferByName(String name) {
+        offerDBService.deleteByName(name);
+    }
+
+    @Override
+    public void deleteOfferByID(long id) {
+        offerDBService.deleteByID(id);
     }
 }

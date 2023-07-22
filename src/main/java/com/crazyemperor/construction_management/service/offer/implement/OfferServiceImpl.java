@@ -1,10 +1,11 @@
 package com.crazyemperor.construction_management.service.offer.implement;
 
+import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Offer;
-import com.crazyemperor.construction_management.entity.auxillirary.OfferStatus;
 import com.crazyemperor.construction_management.repository.OfferRepository;
 import com.crazyemperor.construction_management.service.offer.OfferService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +14,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -22,98 +21,84 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository offerRepository;
 
+    @SneakyThrows
     @Override
     @Transactional
-    public Offer getCheapest() {
+    public Offer getCheapest(long id) {
 
-        List<Offer> offerList = offerRepository.findAll();
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
-        if (offerList.isEmpty()) {
-            return null;
+        Offer cheapestProposal = new Offer();
+        BigDecimal minPrice = new BigDecimal(String.valueOf(offerList.get(0).getAmount()));
+
+        for (Offer offer : offerList) {
+            if (minPrice.compareTo(offer.getAmount()) > 0) {
+                String value = String.valueOf(offer.getAmount());
+                minPrice = new BigDecimal(value);
+
+                cheapestProposal = offer;
+            }
         }
 
-        AtomicReference<Offer> cheapestProposal = new AtomicReference<>(new Offer());
-
-        AtomicReference<BigDecimal> minPrice = new AtomicReference<>(offerList.get(0).getAmount());
-
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .forEach(offer -> {
-                    if (minPrice.get().compareTo(offer.getAmount()) > 0) {
-                        String value = String.valueOf(offer.getAmount());
-                        minPrice.set(new BigDecimal(value));
-
-                        cheapestProposal.set(offer);
-                    }
-                });
-
-        return cheapestProposal.get();
+        return cheapestProposal;
     }
 
+    @SneakyThrows
     @Override
     @Transactional
-    public Offer getFastest() {
+    public Offer getFastest(long id) {
 
-        List<Offer> offerList = offerRepository.findAll();
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
-        if (offerList.isEmpty()) {
-            return null;
+        Offer fastestProposal = new Offer();
+        int minDays = Integer.MAX_VALUE;
+
+        for (Offer offer : offerList) {
+            LocalDate start = LocalDate.parse(String.valueOf(offer.getStart()));
+            LocalDate finish = LocalDate.parse(String.valueOf(offer.getDeadline()));
+
+            int days = Period.between(start, finish).getDays();
+
+            if (days < minDays) {
+                minDays = days;
+                fastestProposal = offer;
+            }
         }
 
-        AtomicReference<Offer> fastestProposal = new AtomicReference<>(new Offer());
-        AtomicInteger minDays = new AtomicInteger(100000000);
-
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .forEach(offer -> {
-                    LocalDate start = LocalDate.parse(String.valueOf(offer.getStart()));
-                    LocalDate finish = LocalDate.parse(String.valueOf(offer.getDeadline()));
-
-                    int days = Period.between(start, finish).getDays();
-
-                    if (days < minDays.get()) {
-                        minDays.set(days);
-
-                        fastestProposal.set(offer);
-                    }
-                });
-
-        return fastestProposal.get();
+        return fastestProposal;
     }
 
-    @Override
-    public List<Offer> getCheaperThan(BigDecimal amount) {
-
-        List<Offer> offerList = offerRepository.findAll();
-
-        if (offerList.isEmpty()) {
-            return null;
-        }
-
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .filter(budget -> budget.getAmount().compareTo(amount) <= 0)
-                .toList();
-
-        return offerList;
-    }
-
+    @SneakyThrows
     @Override
     @Transactional
-    public List<Offer> getFasterThen(int deadline) {
-        List<Offer> offerList = offerRepository.findAll();
+    public List<Offer> getCheaperThan(long id, BigDecimal amount) {
 
-        if (offerList.isEmpty()) return null;
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
 
         List<Offer> newList = new ArrayList<>();
 
-        offerList.stream()
-                .filter(status -> status.getStatus().equals(OfferStatus.ACCEPTED))
-                .filter(deleted -> !deleted.isDeleted())
-                .forEach(offer -> {
+        for (Offer offer : offerList) {
+            if (offer.getAmount().compareTo(amount) >= 0) {
+                newList.add(offer);
+            }
+        }
+        return newList;
+    }
+
+    @SneakyThrows
+    @Override
+    @Transactional
+    public List<Offer> getFasterThen(long id, int deadline) {
+
+        List<Offer> offerList = offerRepository.findAllActiveOffer(id);
+        if (offerList.isEmpty()) throw new NoDataFoundException("There's no offer which was send to you");
+
+        List<Offer> newList = new ArrayList<>();
+
+        offerList.forEach(offer -> {
                     LocalDate start = LocalDate.parse(String.valueOf(offer.getStart()));
                     LocalDate finish = LocalDate.parse(String.valueOf(offer.getDeadline()));
                     int days = Period.between(start, finish).getDays();

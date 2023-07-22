@@ -28,17 +28,17 @@ public class MemberCRUDServiceImpl implements MemberCRUDService {
     }
 
     @Override
-    public Member getMemberByID(int id) {
+    public Member getMemberByID(long id) {
         return membersDBService.getByID(id);
     }
 
     @Override
-    public Member deleteMemberByOrganisation(Long id, Member delete) {
-        return membersDBService.deleteByOrganisation(id, delete);
+    public void deleteMemberByOrganisationName(String name) {
+        membersDBService.deleteByOrganisationName(name);
     }
 
     @Override
-    public Member deleteMemberByID(int id, Member delete) {
-        return membersDBService.deleteByID(id, delete);
+    public void deleteMemberByID(long id) {
+        membersDBService.deleteByID(id);
     }
 }

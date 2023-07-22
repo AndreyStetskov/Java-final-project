@@ -19,51 +19,50 @@ public class MemberController {
     private final MemberService memberService;
 
 
-    @PostMapping(value = "/create_new_member")
-    public ResponseEntity<Member> createInvoice(@RequestBody Member member) {
+    @PostMapping(value = "/create-new-member")
+    public ResponseEntity<Member> createMember(@RequestBody Member member) {
         memberCRUDService.add(member);
         return ResponseEntity.status(HttpStatus.CREATED).body(member);
     }
 
     @GetMapping(value = "/find/all")
-    public ResponseEntity<List<Member>> allInvoices() {
+    public ResponseEntity<List<Member>> allMembers() {
         List<Member> members = memberCRUDService.getAllMembers();
 
-        return members != null ? ResponseEntity.ok(members) : ResponseEntity.noContent().build();
+        if (members != null && !members.isEmpty()) {
+            return ResponseEntity.ok(members);
+        }
+        else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
-    public ResponseEntity<Member> getMemberById(@PathVariable int id) {
+    public ResponseEntity<Member> getMemberById(@PathVariable long id) {
         Member member = memberCRUDService.getMemberByID(id);
 
         return member != null ? ResponseEntity.ok(member) : ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Member> deleteByID(@PathVariable int id, @RequestBody Member member) {
-        Member deactivate = memberCRUDService.deleteMemberByID(id, member);
+    public ResponseEntity<Long> deleteByID(@PathVariable long id) {
+        memberCRUDService.deleteMemberByID(id);
 
-        return member != null ? ResponseEntity.ok(deactivate) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/delete/{organisation_id}")
-    public ResponseEntity<Member> deleteByOrganisation(@PathVariable long organisation_id, @RequestBody Member member) {
-        Member deactivated = memberCRUDService.deleteMemberByOrganisation(organisation_id, member);
+    @PutMapping(value = "/delete/{organisationName}")
+    public ResponseEntity<Long> deleteByOrganisationName(@PathVariable String organisationName) {
+        memberCRUDService.deleteMemberByOrganisationName(organisationName);
 
-        return member != null ? ResponseEntity.ok(deactivated) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/find/with_gmail")
+    @GetMapping(value = "/find/with-gmail")
     public ResponseEntity<List<Member>> getWithGmail() {
         List<Member> memberWithGmail = memberService.getMembersWithGmail();
 
-        return memberWithGmail != null ? ResponseEntity.ok(memberWithGmail) : ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/find/all/paid")
-    public ResponseEntity<List<Member>> getPaid() {
-        List<Member> memberWithGmail = memberService.geAllPaidOrganisations();
-
-        return memberWithGmail != null ? ResponseEntity.ok(memberWithGmail) : ResponseEntity.noContent().build();
+        if (memberWithGmail != null && !memberWithGmail.isEmpty()) {
+            return ResponseEntity.ok(memberWithGmail);
+        }
+        else return ResponseEntity.noContent().build();
     }
 }

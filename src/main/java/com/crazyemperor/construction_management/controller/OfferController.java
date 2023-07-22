@@ -20,7 +20,7 @@ public class OfferController {
     private final OfferService offerService;
 
 
-    @PostMapping(value = "/create_new_offer")
+    @PostMapping(value = "/create-new-offer")
     public ResponseEntity<Offer> createOffer(@RequestBody Offer offer) {
         offerCRUDService.add(offer);
         return ResponseEntity.status(HttpStatus.CREATED).body(offer);
@@ -30,7 +30,9 @@ public class OfferController {
     public ResponseEntity<List<Offer>> allOffers() {
         List<Offer> offers = offerCRUDService.getAllOffers();
 
-        return offers != null ? ResponseEntity.ok(offers) : ResponseEntity.noContent().build();
+        if (offers != null && !offers.isEmpty()) {
+            return ResponseEntity.ok(offers);
+        } else return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/find/{id}")
@@ -40,50 +42,52 @@ public class OfferController {
         return offer != null ? ResponseEntity.ok(offer) : ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/delete/{id}")
-    public ResponseEntity<Offer> deleteByID(@PathVariable Long id, @RequestBody Offer offer) {
-        Offer deleted = offerCRUDService.deleteOfferByID(id, offer);
+    @GetMapping(value = "/find/{name}")
+    public ResponseEntity<Offer> getOfferByName(@PathVariable String name) {
+        Offer offer = offerCRUDService.getOfferByTitle(name);
 
-        return offer != null ? ResponseEntity.ok(deleted) : ResponseEntity.noContent().build();
+        return offer != null ? ResponseEntity.ok(offer) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/delete/{id}")
+    public ResponseEntity<Long> deleteByID(@PathVariable Long id) {
+        offerCRUDService.deleteOfferByID(id);
+
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/delete/{name}")
-    public ResponseEntity<Offer> deleteByName(@PathVariable String name, @RequestBody Offer offer) {
-        Offer deleted = offerCRUDService.deleteOfferByName(name, offer);
+    public ResponseEntity<String> deleteByName(@PathVariable String name) {
+        offerCRUDService.deleteOfferByName(name);
 
-        return offer != null ? ResponseEntity.ok(deleted) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/cheapest")
-    public ResponseEntity<Offer> getTheBestOfferByAmount() {
-        Offer cheapestOffers = offerService.getCheapest();
+    @GetMapping(value = "/{memberId}/cheapest")
+    public ResponseEntity<Offer> getTheBestOfferByAmount(@PathVariable long memberId) {
+        Offer cheapestOffers = offerService.getCheapest(memberId);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/cheapest/{amount}")
-    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable BigDecimal amount) {
-        List<Offer> cheapestOffers = offerService.getCheaperThan(amount);
+    @GetMapping(value = "/{memberId}/cheapest/{amount}")
+    public ResponseEntity<List<Offer>> getOffersByAmount(@PathVariable long memberId, @RequestBody BigDecimal amount) {
+        List<Offer> cheapestOffers = offerService.getCheaperThan(memberId, amount);
 
         return cheapestOffers != null ? ResponseEntity.ok(cheapestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/fastest")
-    public ResponseEntity<Offer> getTheBestOfferByDay() {
-        Offer fastestOffers = offerService.getFastest();
+    @GetMapping(value = "/{memberId}/fastest")
+    public ResponseEntity<Offer> getTheBestOfferByDay(@PathVariable long memberId) {
+        Offer fastestOffers = offerService.getFastest(memberId);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/fastest/{days}")
-    public ResponseEntity<List<Offer>> getOffersByDay(@PathVariable int days) {
-        List<Offer> fastestOffers = offerService.getFasterThen(days);
+    @GetMapping(value = "/fastest/{memberId}/{days}")
+    public ResponseEntity<List<Offer>> getOffersByDay(@PathVariable long memberId, @PathVariable int days) {
+        List<Offer> fastestOffers = offerService.getFasterThen(memberId, days);
 
         return fastestOffers != null ? ResponseEntity.ok(fastestOffers) : ResponseEntity.noContent().build();
-    }
-
-    @PutMapping(value = "/deactivate/")
-    public void deactivate() {
-        offerService.irrelevant();
     }
 }
