@@ -12,3 +12,7 @@ spring:
             url: http://localhost:7070/api/paying
             connect-timeout: 1_200_000
             read-timeout: 1_200_000
+  security:
+    user:
+      name: name
+      password: password
