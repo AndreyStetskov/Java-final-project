@@ -9,8 +9,10 @@ import java.time.LocalDate;
 
 /**
  * <b>Calculation of a total amount</b> of construction site,
+ * <p><img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN_dB3R0ip55pFr8ZoNLX8iFrAO1KjsHZasg&usqp=CAU" alt = "money"></p>
  *  and <b>adding</b> organisation as some member to some construction site.
- * {@code @autor} Stetskov
+ * <p><img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbGicguNrSnx3qxM2fmsZ69hPB9A_o3x9DEQ&usqp=CAU" alt = "join us"></p>
+ * @author Stetskov
  * @version 1.0
  */
 public interface ConstructionSiteService {
@@ -31,7 +33,7 @@ public interface ConstructionSiteService {
     BigDecimal getSumCurrentBuildings();
     /**
      * Calculation of costs of all construction sites which were registered after a certain date
-     * @param date - a single point in time that it is recommended to record the date as a year, then a month, then a day: YYYY-MM-DD.
+     * @param date a single point in time that it is recommended to record the date as a year, then a month, then a day: YYYY-MM-DD.
      * @return A sum of all construction sites
      * @throws NoDataFoundException
      *          thrown if no construction sites were found.
@@ -40,7 +42,7 @@ public interface ConstructionSiteService {
 
     /**
      * Appoints a participant as a general constructor from a selected proposal and changes a status of the participant
-     * @param bestProposal -some selected offer
+     * @param bestProposal some selected offer
      * @throws NoDataFoundException
      *          thrown if no offer was found.
      * @throws IllegalArgumentException

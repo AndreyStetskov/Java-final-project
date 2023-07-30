@@ -81,7 +81,7 @@ public class OfferServiceImpl implements OfferService {
         List<Offer> newList = new ArrayList<>();
 
         for (Offer offer : offerList) {
-            if (offer.getAmount().compareTo(amount) >= 0) {
+            if (offer.getAmount().compareTo(amount) <= 0) {
                 newList.add(offer);
             }
         }
@@ -108,11 +108,4 @@ public class OfferServiceImpl implements OfferService {
 
         return newList;
     }
-
-    @Override
-    @Transactional
-    public void irrelevant() {
-        offerRepository.deactivateExpired();
-    }
-
 }

@@ -84,13 +84,13 @@ class OfferServiceImplTest extends com.crazyemperor.construction_management.Mock
 
 //        given
         long id = anyLong();
-        BigDecimal amount = any(BigDecimal.class);
+        BigDecimal amount = new BigDecimal("1000000");
         Offer offer = new Offer();
         Offer offerTwo = new Offer();
         List<Offer> expected = new ArrayList<>();
 
         offer.setStatus(OfferStatus.ACCEPTED);
-        offer.setAmount(new BigDecimal("115638887"));
+        offer.setAmount(new BigDecimal("115638"));
 
         offerTwo.setStatus(OfferStatus.ACCEPTED);
         offerTwo.setAmount(new BigDecimal("45234"));
@@ -112,7 +112,7 @@ class OfferServiceImplTest extends com.crazyemperor.construction_management.Mock
 
 //        given
         long id = anyLong();
-        int deadline = anyInt();
+        int deadline = 300;
         Offer offer = new Offer();
         Offer offerTwo = new Offer();
         List<Offer> expected = new ArrayList<>();

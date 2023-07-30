@@ -2,7 +2,7 @@ package com.crazyemperor.construction_management.controller;
 
 import com.crazyemperor.construction_management.crud.member.MemberCRUDService;
 import com.crazyemperor.construction_management.entity.Member;
-import com.crazyemperor.construction_management.service.member.MemberService;
+import com.crazyemperor.construction_management.service.member.MembersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberCRUDService memberCRUDService;
-    private final MemberService memberService;
+    private final MembersService memberService;
 
 
     @PostMapping(value = "/create-new-member")
