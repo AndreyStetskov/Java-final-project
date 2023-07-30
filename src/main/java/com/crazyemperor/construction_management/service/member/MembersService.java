@@ -6,11 +6,12 @@ import com.crazyemperor.construction_management.entity.Member;
 import java.util.List;
 
 /**
- * <b>Retrieving list</b> of existing members with e-mail and of a members who paid anything
- * {@code @autor} Stetskov
+ * <b>Retrieving list</b> of existing members with e-mail
+ * <p><img src = "https://w7.pngwing.com/pngs/628/200/png-transparent-e-mail-logo-email-address-email-box-gmail-email-forwarding-email-miscellaneous-angle-logo.png" width = "250" height = "auto" alt = "money"></p>
+ * @author Stetskov
  * @version 1.0
  */
-public interface MemberService {
+public interface MembersService {
 
     /**
      * Retrieving all unpaid invoices

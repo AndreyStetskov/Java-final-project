@@ -14,5 +14,30 @@ spring:
             read-timeout: 1_200_000
   security:
     user:
-      name: name
-      password: password
+      name: 1
+      password: 1
+
+#      resilience4j:
+#        retry:
+#          instances:
+#            bank-retry:
+#              max-attempts: 3
+#              wait-duration:
+#                seconds: 3
+#              retry-exceptions:
+#                - feign.FeignException.BadGateway
+#                - feign.FeignException.BadRequest
+#                - feign.FeignException.NotFound
+#        circuitbreaker:
+#          instances:
+#            bank-breaker:
+#              sliding-window-type: count_based
+#              sliding-window-size: 5
+#              failure-rate-threshold: 75
+#              minimum-number-of-calls: 5
+#              wait-duration-in-open-state:
+#                seconds: 10
+#              max-wait-duration-in-half-open-state:
+#                seconds: 5
+#              automatic-transition-from-open-to-half-open-enabled: true
+#              permitted-number-of-calls-in-half-open-state: 2

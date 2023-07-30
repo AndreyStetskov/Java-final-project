@@ -90,7 +90,7 @@ class InvoiceServiceImplTest extends com.crazyemperor.construction_management.Mo
 
         invoiceTwo.setDeleted(false);
         invoiceTwo.setPaidStatus(InvoiceStatus.ACTUAL);
-        invoice.setAmount(new BigDecimal("45234"));
+        invoiceTwo.setAmount(new BigDecimal("45234"));
         invoiceList.add(invoiceTwo);
 
         BigDecimal expected = new BigDecimal("115684121");

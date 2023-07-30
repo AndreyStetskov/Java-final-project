@@ -3,7 +3,7 @@ package com.crazyemperor.construction_management.controller;
 import com.crazyemperor.construction_management.crud.member.MemberCRUDService;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.entity.Organisation;
-import com.crazyemperor.construction_management.service.member.MemberService;
+import com.crazyemperor.construction_management.service.member.MembersService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,7 +24,7 @@ class MemberControllerTest extends com.crazyemperor.construction_management.Mock
     @Mock
     private MemberCRUDService memberCRUDService;
     @Mock
-    private MemberService memberService;
+    private MembersService memberService;
 
     @InjectMocks
     private MemberController memberController;
@@ -92,7 +92,7 @@ class MemberControllerTest extends com.crazyemperor.construction_management.Mock
 //        given
         member.setDeleted(true);
 
-        ResponseEntity<Member> expected = new ResponseEntity<>(HttpStatus.OK);
+        ResponseEntity<Long> expected = new ResponseEntity<>(HttpStatus.OK);
 
 //        when
         ResponseEntity<Long> actual = memberController.deleteByID(anyLong());

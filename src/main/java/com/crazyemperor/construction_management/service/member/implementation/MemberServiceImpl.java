@@ -3,8 +3,7 @@ package com.crazyemperor.construction_management.service.member.implementation;
 import com.crazyemperor.construction_management.auxillirary.exeption.NoDataFoundException;
 import com.crazyemperor.construction_management.entity.Member;
 import com.crazyemperor.construction_management.repository.MemberRepository;
-import com.crazyemperor.construction_management.repository.PaymentRepository;
-import com.crazyemperor.construction_management.service.member.MemberService;
+import com.crazyemperor.construction_management.service.member.MembersService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MembersService {
 
     private final MemberRepository memberRepository;
 
